@@ -8,9 +8,9 @@ use App\Http\Requests;
 
 use App\Task;
 
-class Task extends Controller
+class TaskController extends Controller
 {
-    public function create(Request $request) {
+    public function store(Request $request) {
         $this->validate($request, [
             "title" => "required",
             "payload.video_dir" => "required",
@@ -22,13 +22,19 @@ class Task extends Controller
             "payload.quality" => "required",
             "task_types" => "required|array"
         ]);
+        $this->createTasksByInput($request->input());
     }
 
     private function createTasksByInput($input) {
-        $tasks_types = $input['task_types'];
-        foreach($tasks_types as $tasks_type) {
+        $tasks = [];
+        $task_types = input['task_types'];
+        foreach($task_types as $task_type) {
             $task = new Task();
+            $task->task_type = $task_type;
+            $task->payload = json_encode($input['payload']);
             $task->save();
+            $tasks[] = $task;
         }
+        return $tasks;
     }
 }
