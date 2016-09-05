@@ -27,11 +27,15 @@ class TaskController extends Controller
 
     private function createTasksByInput($input) {
         $tasks = [];
-        $task_types = input['task_types'];
+        $task_types = $input['task_types'];
         foreach($task_types as $task_type) {
             $task = new Task();
+            $this->uuid = "";
+            $this->title = $input['title'].'_'.$task_type;
+            $this->description = $input['description'];
             $task->task_type = $task_type;
             $task->payload = json_encode($input['payload']);
+            $task->creator_id = Auth::user()->id;
             $task->save();
             $tasks[] = $task;
         }

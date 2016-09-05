@@ -17,8 +17,7 @@ class VideoSplice implements ShouldQueue
     /**
      * Create a new job instance.
      *
-     * @param App\Task|Task $task
-     * @internal param App\Task $task
+     * @param Task $task
      */
     public function __construct(Task $task)
     {
@@ -32,12 +31,17 @@ class VideoSplice implements ShouldQueue
      */
     public function handle()
     {
+        if($this->task->status !== Task::WAITING) {
+            return;
+        }
+        $this->updateTaskStatus(Task::RUNNING);
         $cmd = $this->generateCmdFromTask();
         system($cmd, $return_code);
         if($return_code === 0) {
             $this->updateTaskStatus(Task::FINISH);
+        } else {
+            $this->updateTaskStatus(Task::ERROR);
         }
-
     }
 
     private function generateCmdFromTask() {
@@ -48,10 +52,7 @@ class VideoSplice implements ShouldQueue
         $ring_rectify_file = "";
         $camera_model_file = "";
         $end_frame = $payload['end_frame'];
-        $start_frames = $this->compute_start_frames(
-            $payload['start_frame'],
-            $payload['end_frame'],
-            $payload['time_alignment']);
+        $start_frames = $this->compute_start_frames( $payload['start_frame'], $payload['time_alignment']);
         $start_frames = implode("-", $start_frames);
         $cmd_format = "../../build/bin/test_render_stereo_panorama ".
                       "-uuid %s ".
