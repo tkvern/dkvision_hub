@@ -17,4 +17,9 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index');
+Route::get('home', 'HomeController@index');
+
+
+// Task
+Route::get('/task', 'TaskController@index');
+Route::get('/task/new', 'TaskController@new');

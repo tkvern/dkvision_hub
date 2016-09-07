@@ -41,4 +41,12 @@ class TaskController extends Controller
         }
         return $tasks;
     }
+
+    public function index(){
+        return view('task.index');
+    }
+
+    public function new() {
+        return view('task.new');
+    }
 }

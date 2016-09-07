@@ -7,3 +7,17 @@
 
 // Bootstrap
 @import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+
+
+.table {
+  th, td {
+    max-width: 300px;
+    min-width: 100px;
+  }
+}
+
+.ellipsis {
+  text-overflow: ellipsis; 
+  white-space: nowrap;
+  overflow: hidden;
+}

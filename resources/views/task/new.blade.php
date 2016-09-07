@@ -2,11 +2,10 @@
 
 @section('body')
 <div class="panel panel-default">
-    <div class="panel-heading">控制台</div>
+    <div class="panel-heading">任务管理</div>
 
     <div class="panel-body">
-        <p>登录成功!</p>
-        <p>请在左侧导航选择相应功能</p>
+        <p>This is new Page</p>
     </div>
 </div>
 @endsection
