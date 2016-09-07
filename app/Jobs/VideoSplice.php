@@ -7,6 +7,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Task;
+use App\Utils\DkvideoHelper;
 
 class VideoSplice implements ShouldQueue
 {
@@ -47,14 +48,16 @@ class VideoSplice implements ShouldQueue
     private function generateCmdFromTask() {
         $uuid = $this->task['uuid'];
         $payload = json_decode($this->task['payload'];
-        $video_dir = $payload['video_dir'];
-        $output_dir = $payload['video_dir'];
-        $ring_rectify_file = "";
-        $camera_model_file = "";
-        $end_frame = $payload['end_frame'];
-        $start_frames = $this->compute_start_frames( $payload['start_frame'], $payload['time_alignment']);
-        $start_frames = implode("-", $start_frames);
-        $cmd_format = "../../build/bin/test_render_stereo_panorama ".
+        $videoDir = $payload['video_dir'];
+        $snDir = DkvideoHelper::evalSerialNumberDir($videoDir);
+        $videoBasename = basename($videoDir);
+        $outputDir = dirname($payload['video_dir'], 2)."/output/$videoBasename";
+        $ringRectifyFile = "/data/config/$snDir/ring_rectify.xml";
+        $cameraModelFile = "/data/config/$snDir/camera_setting.xml";
+        $endFrame = $payload['end_frame'];
+        $startFrames = DkvideoHelper::computeStartFrames($payload['start_frame'], $payload['time_alignment']);
+        $startFrames = implode("-", $startFrames);
+        $cmdFormat = "../../build/bin/test_render_stereo_panorama ".
                       "-uuid %s ".
                       "-video_dir %s ".
                       "-output_dir %s ".
@@ -62,18 +65,9 @@ class VideoSplice implements ShouldQueue
                       "-camera_model_file %s ".
                       "-start_frames %s ".
                       "-end_frame %s";
-        $cmd = printf($cmd_format, $uuid, $video_dir, $output_dir, $ring_rectify_file,
-                        $camera_model_file, $start_frames, $end_frame);
+        $cmd = printf($cmdFormat, $uuid, $videoDir, $outputDir, $ringRectifyFile,
+                        $cameraModelFile, $startFrames, $endFrame);
         return $cmd;
-    }
-
-    private function compute_start_frames($start_frame, $time_alignment) {
-        $start_frames = [];
-        foreach ($time_alignment as  $value) {
-            $start_frame +=  $value;
-            $start_frames[] = $start_frame;
-        }
-        return $start_frames;
     }
 
     private function updateTaskStatus($status) {

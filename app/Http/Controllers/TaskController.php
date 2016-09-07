@@ -22,10 +22,10 @@ class TaskController extends Controller
             "payload.quality" => "required",
             "task_types" => "required|array"
         ]);
-        $this->createTasksByInput($request->input());
+        $this->createTasks($request->all());
     }
 
-    private function createTasksByInput($input) {
+    private function createTasks($input) {
         $tasks = [];
         $task_types = $input['task_types'];
         foreach($task_types as $task_type) {
