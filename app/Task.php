@@ -11,4 +11,8 @@ class Task extends Model
     const FINISH = 3;
     const ERROR = 4;
     const UNKNOWN = 5;
+
+    public function user() {
+        $this->belongsTo('App\User', 'creator_id');
+    }
 }
