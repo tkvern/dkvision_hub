@@ -30,15 +30,19 @@ class TaskController extends Controller
         $task_types = $input['task_types'];
         foreach($task_types as $task_type) {
             $task = new Task();
-            $this->uuid = "";
+            $this->uuid = uuid1();
             $this->title = $input['title'].'_'.$task_type;
             $this->description = $input['description'];
             $task->task_type = $task_type;
             $task->payload = json_encode($input['payload']);
             $task->creator_id = Auth::user()->id;
-            $task->save();
             $tasks[] = $task;
         }
+        DB::transaction(function() use ($tasks) {
+            $tasks.map(function($task) {
+               $task->save();
+            });
+        });
         return $tasks;
     }
 }
