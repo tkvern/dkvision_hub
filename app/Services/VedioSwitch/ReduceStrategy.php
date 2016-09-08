@@ -36,6 +36,7 @@ class ReduceStrategy implements  Strategy {
                 $tmpPayload['start_frame'] = $i;
                 $tmpPayload['end_frame'] = $i + 5 > $end_frame ? $end_frame : $$i + 1;
                 $subTask = $task->clone();
+                $subTask->uuid = uuid1();
                 $subTask->payload = json_encode($tmpPayload);
                 $subTask->parent_id = $task->id;
                 $subTasks[] = $subTask;
