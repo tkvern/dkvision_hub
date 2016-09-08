@@ -12,6 +12,9 @@
 
     <!-- Styles -->
     <link href="/css/app.css" rel="stylesheet">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.gmirror.org/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
 
     <!-- Scripts -->
     <script>

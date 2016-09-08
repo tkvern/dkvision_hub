@@ -2,12 +2,17 @@
 
 @section('body')
 <div class="panel panel-default">
-    <div class="panel-heading">任务管理</div>
+    <div class="panel-heading">
+      <ol class="breadcrumb">
+        <li><a href="/home">控制台</a></li>
+        <li class="active">任务管理</li>
+      </ol>
+    </div>
 
     <div class="panel-body">
         <div class="row">
             <div class="col-md-12">
-                <a href="#" class="btn btn-default" title="添加">
+                <a href="/task/new" class="btn btn-default" title="添加">
                     <span class="glyphicon glyphicon-plus"></span>
                 </a>
             </div>

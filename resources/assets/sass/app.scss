@@ -12,7 +12,7 @@
 .table {
   th, td {
     max-width: 300px;
-    min-width: 100px;
+    min-width: 90px;
   }
 }
 
@@ -20,4 +20,13 @@
   text-overflow: ellipsis; 
   white-space: nowrap;
   overflow: hidden;
+}
+
+.breadcrumb {
+  margin: 0px;
+  padding: 0px; 
+}
+
+.margin-bottom {
+  margin-bottom: 15px;
 }
