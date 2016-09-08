@@ -11,12 +11,16 @@ use App\Utils\DkvideoHelper;
 
 class TaskController extends Controller
 {
-    public function index(Request $request) {
+    public function index() {
         return view('task.index');
     }
 
     public function show(Request $request, $task_id) {
         return view('task.show');
+    }
+
+    public function new() {
+        return view('task.new');
     }
 
     public function store(Request $request) {

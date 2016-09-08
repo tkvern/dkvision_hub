@@ -1,17 +1,16 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
-@section('content')
-<div class="container">
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading">Dashboard</div>
+@section('body')
+<div class="panel panel-default">
+    <div class="panel-heading">
+      <ol class="breadcrumb">
+        <li class="active">控制台</li>
+      </ol>
+    </div>
 
-                <div class="panel-body">
-                    You are logged in!
-                </div>
-            </div>
-        </div>
+    <div class="panel-body">
+        <p>登录成功!</p>
+        <p>请在左侧导航选择相应功能</p>
     </div>
 </div>
 @endsection
