@@ -7,9 +7,18 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 
 use App\Task;
+use App\Utils\DkvideoHelper;
 
 class TaskController extends Controller
 {
+    public function index(Request $request) {
+        return view('task.index');
+    }
+
+    public function show(Request $request, $task_id) {
+        return view('task.show');
+    }
+
     public function store(Request $request) {
         $this->validate($request, [
             "title" => "required",
@@ -22,7 +31,10 @@ class TaskController extends Controller
             "payload.quality" => "required",
             "task_types" => "required|array"
         ]);
-        $this->createTasks($request->all());
+        //$this->makeOutputDir($this->input('payload.video_dir'));
+        $tasks = $this->createTasks($request->all());
+        $this->enQueueTasks($tasks);
+        return redirect()->route('/tasks');
     }
 
     private function createTasks($input) {
@@ -44,5 +56,23 @@ class TaskController extends Controller
             });
         });
         return $tasks;
+    }
+
+    private function enQueueTasks($tasks) {
+        array_map(function($task) {
+            app()->make(App\Contacts\VideoSwitch\Strategy::class)->handle($task);
+        }, $tasks);
+    }
+
+    /**
+     *  创建对应的输出文件夹
+     *
+     * @param string $input_dir
+     */
+    private function makeOutputDir($input_dir) {
+        $outputDir = DkvideoHelper::getOutputDir($this->input('payload.video_dir'));
+        if(!file_exists($outputDir)) {
+            mkdir($outputDir);
+        }
     }
 }

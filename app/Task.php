@@ -13,6 +13,14 @@ class Task extends Model
     const UNKNOWN = 5;
 
     public function user() {
-        $this->belongsTo('App\User', 'creator_id');
+        return $this->belongsTo('App\User', 'creator_id');
+    }
+
+    public function subTasks() {
+        return $this->hasMany('App\Task', 'parent_id');
+    }
+
+    public function parentTask() {
+        return $this->belongsTo('App\Task', 'parent_id');
     }
 }

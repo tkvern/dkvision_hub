@@ -14,6 +14,10 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         //
+        $this->app->bind(
+            'App\Contacts\VideoSwitch\Strategy',
+            'App\Services\VideoSwitch\SimpleStrategy'
+        );
     }
 
     /**

@@ -5,10 +5,11 @@
  * Date: 16/9/7
  * Time: 下午11:34
  */
-namespace App\Tasks\VideoSwitch;
+namespace App\Services\VideoSwitch;
+
+use Illuminate\Support\Facades\DB;
 
 use App\Contacts\VideoSwitch\Strategy;
-
 use App\Jobs\VideoSwitch;
 
 class ReduceStrategy implements  Strategy {
@@ -41,7 +42,7 @@ class ReduceStrategy implements  Strategy {
                 $subTask->parent_id = $task->id;
                 $subTasks[] = $subTask;
             }
-            DB::transcation(function() use ($subTasks) {
+            DB::transaction(function() use ($subTasks) {
                 array_map(function($subTask) {
                     $subTask->save();
                 }, $subTasks);
