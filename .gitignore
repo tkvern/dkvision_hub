@@ -7,3 +7,4 @@ Homestead.yaml
 .env
 *.swp
 *.swo
+.DS_Store
