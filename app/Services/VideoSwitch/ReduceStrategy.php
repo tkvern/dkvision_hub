@@ -31,7 +31,7 @@ class ReduceStrategy implements  Strategy {
         $end_frame = $payload['end_frame'];
         $total_frame = $end_frame - $start_frame;
         $subTasks = [];
-        $slice = 500;
+        $slice = config('task.frame_slice');
         if($total_frame > $slice) {
             for($i = $start_frame; $i < $end_frame; $i += $slice) {
                 $tmpPayload = array_copy($payload);

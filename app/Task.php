@@ -92,6 +92,10 @@ class Task extends Model
 
     public function configDir() {
         $snDir = DkvideoHelper::evalSerialNumberDir($this->payload['video_dir']);
-        return '/data/config/'.$snDir;
+        $base = config('task.config_dir');
+        if(substr($base, strlen($base) - 1) !== '/') {
+            $base .= '/';
+        }
+        return $base.$snDir;
     }
 }

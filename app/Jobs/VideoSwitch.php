@@ -7,7 +7,6 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Task;
-use App\Utils\DkvideoHelper;
 
 class VideoSwitch implements ShouldQueue
 {
@@ -65,7 +64,7 @@ class VideoSwitch implements ShouldQueue
         $enableColorAdjust = $payload['enable_coloradjust'];
         $endFrame = $payload['end_frame'];
         $startFrames = implode("_", $this->task->startFrames());
-        $cmdFormat = "../../build/bin/test_render_stereo_panorama ".
+        $cmdFormat = config('task.exec_path').
                       "-task_uuid %s ".
                       "-video_dir %s ".
                       "-output_dir %s ".
