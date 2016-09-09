@@ -28,6 +28,6 @@ class User extends Authenticatable
     ];
 
     public function tasks() {
-        $this->hasMany('App\Task', 'creator_id');
+        return $this->hasMany('App\Task', 'creator_id');
     }
 }

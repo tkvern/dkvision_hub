@@ -21,5 +21,6 @@ Route::get('home', 'HomeController@index');
 
 
 // Task
-Route::get('/task', 'TaskController@index');
-Route::get('/task/new', 'TaskController@new');
+Route::get('tasks', 'TaskController@index');
+Route::get('tasks/create', 'TaskController@create');
+Route::post('tasks', 'TaskController@store');

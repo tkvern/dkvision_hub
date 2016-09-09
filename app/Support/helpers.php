@@ -3,6 +3,8 @@
 use Ramsey\Uuid\Uuid;
 use Illuminate\Support\Facades\DB;
 
+use App\Task;
+
 if(! function_exists('uuid1')) {
     function uuid1() {
         $func_args = func_get_args();
@@ -67,3 +69,20 @@ if(! function_exists('transaction_save_many')) {
         });
     }
 }
+
+if(! function_exists('array_copy')) {
+    /**
+     * 数组浅拷贝
+     * @param array $arr
+     * @return array
+     */
+    function array_copy(array $arr) {
+        $copyArr = [];
+        foreach ($arr as $key => $value) {
+            $copyArr[$key] = $value;
+        }
+        return $copyArr;
+    }
+}
+
+

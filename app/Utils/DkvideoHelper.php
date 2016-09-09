@@ -4,9 +4,10 @@ use DirectoryIterator;
 
 class DkvideoHelper {
     public static function computeStartFrames($startFrame, $timeAlignment) {
+        $startFrame = intval($startFrame);
         $startFrames = [];
         foreach ($timeAlignment as  $value) {
-            $startFrame +=  $value;
+            $startFrame +=  intval($value);
             $startFrames[] = $startFrame;
         }
         return $startFrames;
@@ -16,35 +17,34 @@ class DkvideoHelper {
         return dirname($inputDir, 2).'/output/'.basename($inputDir);
     }
 
-    public static function getAllVideoFileInfo($dir) {
+    public static function getAllVideoFile($dir) {
         $dirIterator = new DirectoryIterator($dir);
-        $allVideoFileInfo = [];
+        $allVideoFile = [];
         foreach($dirIterator as $fileInfo) {
-            if($fileInfo->isFile() and in_array($fileInfo->getExtension(), ['avi', 'mp4', 'mov'])) {
-                $allVideoFileInfo[] = $fileInfo;
+            if($fileInfo->isFile() && in_array($fileInfo->getExtension(), ['avi', 'mp4', 'mov'])) {
+                $allVideoFile[] = $fileInfo->getFilename();
             }
         }
-        return $allVideoFileInfo;
+        return $allVideoFile;
     }
 
     public static function getVideoFileCount($dir) {
-        return count(self::getAllVideoFileInfo($dir));
+        return count(self::getAllVideoFile($dir));
     }
 
     public static function evalSerialNumberDir($inputDir) {
-        $allFileInfo = self::getAllVideoFileInfo($inputDir);
+        $allFile = self::getAllVideoFile($inputDir);
         //文件件错误
-        if(empty($allFileInfo)) {
+        if(empty($allFile)) {
             return false;
         }
-        $oneFileInfo = $allFileInfo[0];
-        $filesCount = count($allFileInfo);
-        $extension = $oneFileInfo->getExtension();
+        $oneFile = $allFile[0];
+        $filesCount = count($allFile);
+        $extension = substr(strrchr($oneFile, '.'), 1);
         switch ($extension) {
             case 'avi':
                 // 获取类似sn_0000001的序列前缀
-                $filename = $oneFileInfo->getFilename();
-                $sn = substr($filename, 0, strpos($filename, '_', 3));
+                $sn = substr($oneFile, 0, strpos($oneFile, '_', 3));
                 return $sn;
             case 'mp4':
                 return "gopro_${filesCount}_camera";

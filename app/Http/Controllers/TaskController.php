@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 use App\Http\Requests;
 
@@ -12,14 +13,15 @@ use App\Utils\DkvideoHelper;
 class TaskController extends Controller
 {
     public function index() {
-        return view('task.index');
+        $tasks = Auth::user()->tasks()->where('parent_id', 0)->get();
+        return view('task.index', ["tasks" => $tasks]);
     }
 
     public function show(Request $request, $task_id) {
         return view('task.show');
     }
 
-    public function new() {
+    public function create() {
         return view('task.new');
     }
 
@@ -29,54 +31,42 @@ class TaskController extends Controller
             "payload.video_dir" => "required",
             "payload.start_frame" => "required|integer",
             "payload.end_frame" => "required|integer",
-            "payload.time_alignment" => "required",
+            "payload.time_alignment" => "required|array",
             "payload.enable_top" => "required",
             "payload.enable_bottom" => "required",
+            "payload.enable_coloradjust" => "required",
             "payload.quality" => "required",
             "task_types" => "required|array"
         ]);
-        //$this->makeOutputDir($this->input('payload.video_dir'));
-        $tasks = $this->createTasks($request->all());
+        $tasks = $this->createTasks($request->input());
         $this->enQueueTasks($tasks);
-        return redirect()->route('/tasks');
+        return redirect()->action('TaskController@index');
     }
 
     private function createTasks($input) {
         $tasks = [];
         $task_types = $input['task_types'];
         foreach($task_types as $task_type) {
+            $payload = array_copy($input['payload']);
+            $payload['task_type'] = $task_type;
             $task = new Task();
-            $this->uuid = uuid1();
-            $this->title = $input['title'].'_'.$task_type;
-            $this->description = $input['description'];
-            $task->task_type = $task_type;
-            $task->payload = json_encode($input['payload']);
+            $task->uuid = uuid1();
+            $task->title = $input['title'].'_'.$task_type;
+            $task->description = $input['description'];
+            $task->task_type = 'videoswitch';
+            $task->payload = $payload;
             $task->creator_id = Auth::user()->id;
+            $task->parent_id = 0;
+            $task->status = Task::WAITING;
             $tasks[] = $task;
         }
-        DB::transaction(function() use ($tasks) {
-            $tasks.map(function($task) {
-               $task->save();
-            });
-        });
+        transaction_save_many($tasks);
         return $tasks;
     }
 
     private function enQueueTasks($tasks) {
         array_map(function($task) {
-            app()->make(App\Contacts\VideoSwitch\Strategy::class)->handle($task);
+            app()->make('App\Contacts\VideoSwitch\Strategy')->handle($task);
         }, $tasks);
-    }
-
-    /**
-     *  创建对应的输出文件夹
-     *
-     * @param string $input_dir
-     */
-    private function makeOutputDir($input_dir) {
-        $outputDir = DkvideoHelper::getOutputDir($this->input('payload.video_dir'));
-        if(!file_exists($outputDir)) {
-            mkdir($outputDir);
-        }
     }
 }

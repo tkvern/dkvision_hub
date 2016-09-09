@@ -4,242 +4,141 @@
 <div class="panel panel-default">
     <div class="panel-heading">
       <ol class="breadcrumb">
-        <li><a href="/home">控制台</a></li>
-        <li><a href="/task">任务管理</a></li>
+        <li><a href="{{ url('/home') }}">控制台</a></li>
+        <li><a href="{{ url('/task') }}">任务管理</a></li>
         <li class="active">添加任务</li>
       </ol>
     </div>
 
     <div class="panel-body">
-      <form class="form-horizontal" role="form" method="POST" action="{{ url('/register') }}">
+      <form class="form-horizontal" role="form" method="POST" action="{{ url('/tasks') }}">
           {{ csrf_field() }}
 
-          <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-              <label for="name" class="col-md-3 control-label">名称</label>
+          <div class="form-group{{ $errors->has('title') ? ' has-error' : '' }}">
+              <label for="title" class="col-md-3 control-label">任务名</label>
 
               <div class="col-md-8">
-                  <input id="name" type="text" class="form-control" name="name" value="{{ old('name') }}" required autofocus>
+                  <input id="title" type="text" class="form-control" name="title" value="{{ old('title') }}" required autofocus autocomplete="off">
               </div>
           </div>
 
-          <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-              <label for="email" class="col-md-3 control-label">视频路径</label>
+          <div class="form-group{{ $errors->has('payload.video_dir') ? ' has-error' : '' }}">
+              <label for="payload[video_dir]" class="col-md-3 control-label">视频路径</label>
 
               <div class="col-md-8">
-                  <input id="email" type="text" class="form-control" name="email" placeholder="example: ip/your/path" required>
+                  <input id="payload[video_dir]" type="text" class="form-control"
+                         name="payload[video_dir]" placeholder="例如: /data/path"
+                         value="{{ old('payload.video_dir') }}"
+                         autocomplete="off" required>
               </div>
           </div>
 
-          <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-              <label for="email" class="col-md-3 control-label">开始桢</label>
+          <div class="form-group{{ $errors->has('payload.start_frame') ? ' has-error' : '' }}">
+              <label for="payload[start_frame]" class="col-md-3 control-label">开始桢</label>
 
               <div class="col-md-8">
-                  <input id="email" type="number" class="form-control" name="email" value="0" required>
+                  <input id="payload[start_frame]" type="number" class="form-control" name="payload[start_frame]" value="0" required>
               </div>
           </div>
 
-          <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-              <label for="email" class="col-md-3 control-label">结束桢</label>
+          <div class="form-group{{ $errors->has('payload.end_frame') ? ' has-error' : '' }}">
+              <label for="payload[end_frame]" class="col-md-3 control-label">结束桢</label>
 
               <div class="col-md-8">
-                  <input id="email" type="number" class="form-control" name="email" value="0" required>
+                  <input id="payload[end_frame]" type="number" class="form-control" name="payload[end_frame]" value="0" required>
               </div>
           </div>
 
-          <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-              <label for="email" class="col-md-3 control-label">时间同步</label>
+          <div class="form-group{{ $errors->has('payload.time_alignment') ? ' has-error' : '' }}">
+              <label for="payload[time_alignment]" class="col-md-3 control-label">时间同步</label>
 
               <div class="col-md-8 form-group">
+                  @for($i = 0; $i < 20; $i++)
                   <div class="col-md-3 margin-bottom">
                     <div class="input-group input-group-sm">
-                      <div class="input-group-addon">00</div>
-                      <input class="form-control" type="number" value="0">
+                      <div class="input-group-addon">{{ str_pad($i, 2, 0, STR_PAD_LEFT) }}</div>
+                      <input name="payload[time_alignment][]" class="form-control" type="number" value="0">
                     </div>
                   </div>
-                  <div class="col-md-3 margin-bottom">
-                    <div class="input-group input-group-sm">
-                      <div class="input-group-addon">01</div>
-                      <input class="form-control" type="number" value="0">
-                    </div>
-                  </div>
-                  <div class="col-md-3 margin-bottom">
-                    <div class="input-group input-group-sm">
-                      <div class="input-group-addon">02</div>
-                      <input class="form-control" type="number" value="0">
-                    </div>
-                  </div>
-                  <div class="col-md-3 margin-bottom">
-                    <div class="input-group input-group-sm">
-                      <div class="input-group-addon">03</div>
-                      <input class="form-control" type="number" value="0">
-                    </div>
-                  </div>
-
-                  <div class="col-md-3 margin-bottom">
-                    <div class="input-group input-group-sm">
-                      <div class="input-group-addon">04</div>
-                      <input class="form-control" type="number" value="0">
-                    </div>
-                  </div>
-                  <div class="col-md-3 margin-bottom">
-                    <div class="input-group input-group-sm">
-                      <div class="input-group-addon">05</div>
-                      <input class="form-control" type="number" value="0">
-                    </div>
-                  </div>
-                  <div class="col-md-3 margin-bottom">
-                    <div class="input-group input-group-sm">
-                      <div class="input-group-addon">06</div>
-                      <input class="form-control" type="number" value="0">
-                    </div>
-                  </div>
-                  <div class="col-md-3 margin-bottom">
-                    <div class="input-group input-group-sm">
-                      <div class="input-group-addon">07</div>
-                      <input class="form-control" type="number" value="0">
-                    </div>
-                  </div>
-
-                  <div class="col-md-3 margin-bottom">
-                    <div class="input-group input-group-sm">
-                      <div class="input-group-addon">08</div>
-                      <input class="form-control" type="number" value="0">
-                    </div>
-                  </div>
-                  <div class="col-md-3 margin-bottom">
-                    <div class="input-group input-group-sm">
-                      <div class="input-group-addon">09</div>
-                      <input class="form-control" type="number" value="0">
-                    </div>
-                  </div>
-                  <div class="col-md-3 margin-bottom">
-                    <div class="input-group input-group-sm">
-                      <div class="input-group-addon">10</div>
-                      <input class="form-control" type="number" value="0">
-                    </div>
-                  </div>
-                  <div class="col-md-3 margin-bottom">
-                    <div class="input-group input-group-sm">
-                      <div class="input-group-addon">11</div>
-                      <input class="form-control" type="number" value="0">
-                    </div>
-                  </div>
-
-                  <div class="col-md-3 margin-bottom">
-                    <div class="input-group input-group-sm">
-                      <div class="input-group-addon">12</div>
-                      <input class="form-control" type="number" value="0">
-                    </div>
-                  </div>
-                  <div class="col-md-3 margin-bottom">
-                    <div class="input-group input-group-sm">
-                      <div class="input-group-addon">13</div>
-                      <input class="form-control" type="number" value="0">
-                    </div>
-                  </div>
-                  <div class="col-md-3 margin-bottom">
-                    <div class="input-group input-group-sm">
-                      <div class="input-group-addon">14</div>
-                      <input class="form-control" type="number" value="0">
-                    </div>
-                  </div>
-                  <div class="col-md-3 margin-bottom">
-                    <div class="input-group input-group-sm">
-                      <div class="input-group-addon">15</div>
-                      <input class="form-control" type="number" value="0">
-                    </div>
-                  </div>
-
-                  <div class="col-md-3 margin-bottom">
-                    <div class="input-group input-group-sm">
-                      <div class="input-group-addon">16</div>
-                      <input class="form-control" type="number" value="0">
-                    </div>
-                  </div>
-                  <div class="col-md-3 margin-bottom">
-                    <div class="input-group input-group-sm">
-                      <div class="input-group-addon">17</div>
-                      <input class="form-control" type="number" value="0">
-                    </div>
-                  </div>
-                  <div class="col-md-3 margin-bottom">
-                    <div class="input-group input-group-sm">
-                      <div class="input-group-addon">18</div>
-                      <input class="form-control" type="number" value="0">
-                    </div>
-                  </div>
-                  <div class="col-md-3 margin-bottom">
-                    <div class="input-group input-group-sm">
-                      <div class="input-group-addon">19</div>
-                      <input class="form-control" type="number" value="0">
-                    </div>
-                  </div>
+                  @endfor
               </div>
-
           </div>
-
-          <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-              <label for="email" class="col-md-3 control-label">顶部</label>
+          <div class="form-group{{ $errors->has('payload.enable_top') ? ' has-error' : '' }}">
+              <label for="payload[enable_top]" class="col-md-3 control-label">顶部</label>
 
               <div class="col-md-8">
                   <label class="radio-inline">
-                    <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1" checked> 关闭
+                    <input type="radio" name="payload[enable_top]"  value="0" checked> 关闭
                   </label>
                   <label class="radio-inline">
-                    <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> 开启
+                    <input type="radio" name="payload[enable_top]"  value="1"> 开启
                   </label>
               </div>
           </div>
 
-          <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-              <label for="email" class="col-md-3 control-label">底部</label>
+          <div class="form-group{{ $errors->has('payload.enable_bottom') ? ' has-error' : '' }}">
+              <label for="payload[enable_bottom]" class="col-md-3 control-label">底部</label>
 
               <div class="col-md-8">
                   <label class="radio-inline">
-                    <input type="radio" name="inlineRadioOptions2" id="inlineRadio1" value="option1" checked> 关闭
+                    <input type="radio" name="payload[enable_bottom]" value="0" checked> 关闭
                   </label>
                   <label class="radio-inline">
-                    <input type="radio" name="inlineRadioOptions2" id="inlineRadio2" value="option2"> 开启
+                    <input type="radio" name="payload[enable_bottom]" value="1"> 开启
                   </label>
               </div>
           </div>
 
-          <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-              <label for="email" class="col-md-3 control-label">分辨率</label>
+          <div class="form-group{{ $errors->has('payload.enable_coloradjust') ? ' has-error' : '' }}">
+              <label for="payload[enable_coloradjust]" class="col-md-3 control-label">颜色调整</label>
+
               <div class="col-md-8">
                   <label class="radio-inline">
-                    <input type="radio" name="inlineRadioOptions3" id="inlineRadio1" value="option1" checked> 8K
+                      <input type="radio" name="payload[enable_coloradjust]" value="0" checked> 关闭
                   </label>
                   <label class="radio-inline">
-                    <input type="radio" name="inlineRadioOptions3" id="inlineRadio2" value="option2"> 6K
-                  </label>
-                  <label class="radio-inline">
-                    <input type="radio" name="inlineRadioOptions3" id="inlineRadio2" value="option2"> 4K
+                      <input type="radio" name="payload[enable_coloradjust]" value="1"> 开启
                   </label>
               </div>
           </div>
 
-          <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-              <label for="email" class="col-md-3 control-label">类型</label>
+          <div class="form-group{{ $errors->has('payload.quality') ? ' has-error' : '' }}">
+              <label for="payload[quality]" class="col-md-3 control-label">质量</label>
+              <div class="col-md-8">
+                  <label class="radio-inline">
+                    <input type="radio" name="payload[quality]" value="8k" checked> 8K
+                  </label>
+                  <label class="radio-inline">
+                    <input type="radio" name="payload[quality]" value="6k"> 6K
+                  </label>
+                  <label class="radio-inline">
+                    <input type="radio" name="payload[quality]" value="4k"> 4K
+                  </label>
+              </div>
+          </div>
+
+          <div class="form-group{{ $errors->has('task_types') ? ' has-error' : '' }}">
+              <label for="task_types" class="col-md-3 control-label">类型</label>
               <div class="col-md-8">
                 <label class="checkbox-inline">
-                  <input type="checkbox" id="inlineCheckbox1" value="option1" checked> 预览
+                    <input type="checkbox" name="task_types[]" value="preview" checked> 预览
                 </label>
                 <label class="checkbox-inline">
-                  <input type="checkbox" id="inlineCheckbox2" value="option2"> 2D
+                    <input type="checkbox" name="task_types[]" value="2D"> 2D
+                </label>
                 </label>
                 <label class="checkbox-inline">
-                  <input type="checkbox" id="inlineCheckbox3" value="option3"> 3D
+                    <input type="checkbox" name="task_types[]" value="3D"> 3D
                 </label>
               </div>
           </div>
 
 
-          <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-              <label for="email" class="col-md-3 control-label">描述</label>
+          <div class="form-group{{ $errors->has('description') ? ' has-error' : '' }}">
+              <label for="description" class="col-md-3 control-label">备注</label>
 
               <div class="col-md-8">
-                  <textarea class="form-control" rows="3"></textarea>
+                  <textarea name="description" class="form-control" rows="3"></textarea>
                   <!-- <input id="email" type="number" class="form-control" name="email" value="0" required> -->
               </div>
           </div>
@@ -257,4 +156,13 @@
       </form>
     </div>
 </div>
+@if (count($errors) > 0)
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
 @endsection

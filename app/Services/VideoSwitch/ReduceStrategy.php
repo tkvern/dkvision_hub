@@ -31,11 +31,12 @@ class ReduceStrategy implements  Strategy {
         $end_frame = $payload['end_frame'];
         $total_frame = $end_frame - $start_frame;
         $subTasks = [];
-        if($total_frame > 5) {
-            for($i = $start_frame; $i < $end_frame; $i += 5) {
+        $slice = 500;
+        if($total_frame > $slice) {
+            for($i = $start_frame; $i < $end_frame; $i += $slice) {
                 $tmpPayload = array_copy($payload);
                 $tmpPayload['start_frame'] = $i;
-                $tmpPayload['end_frame'] = $i + 5 > $end_frame ? $end_frame : $$i + 1;
+                $tmpPayload['end_frame'] = $i + $slice >= $end_frame ? $end_frame : $i + $slice -1;
                 $subTask = $task->replicate(['uuid', 'payload', 'parent_id']);
                 $subTask->uuid = uuid1();
                 $subTask->payload = $tmpPayload;

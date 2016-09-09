@@ -37,6 +37,7 @@ class VideoSwitch implements ShouldQueue
         }
         $this->updateTaskStatus(Task::RUNNING);
         $cmd = $this->generateCmdFromTask();
+        info("exec: $cmd");
         system($cmd, $exit_code);
         if($exit_code === 0) {
             $this->updateTaskStatus(Task::FINISH);
@@ -47,23 +48,25 @@ class VideoSwitch implements ShouldQueue
 
     private function generateCmdFromTask() {
         $uuid = $this->task['uuid'];
-        $payload = json_decode($this->task['payload']);
+        $payload = $this->task['payload'];
         $videoDir = $payload['video_dir'];
-        $snDir = DkvideoHelper::evalSerialNumberDir($videoDir);
-        $outputDir = DkvideoHelper::getOutputDir($videoDir);
-        $ringRectifyFile = "/data/config/$snDir/ring_rectify.xml";
-        $cameraSettingFile = "/data/config/$snDir/camera_setting.xml";
-        $topRectifyFile = "/data/config/$snDir/top_rectify.xml";
-        $bottomRectifyFile = "/data/config/$snDir/bottom_rectify.xml";
-        $mixRectifyFile = "/data/config/$snDir/mix_rectify.xml";
+        $outputDir = $this->task->outputDir();
+        if(! file_exists($outputDir)) {
+            mkdir($outputDir, 0777, true);
+        }
+        $snDir = $this->task->configDir();
+        $ringRectifyFile = "$snDir/ring_rectify.xml";
+        $cameraSettingFile = "$snDir/camera_setting.xml";
+        $topRectifyFile = "$snDir/top_rectify.xml";
+        $bottomRectifyFile = "$snDir/bottom_rectify.xml";
+        $mixRectifyFile = "$snDir/mix_rectify.xml";
         $enableTop = $payload['enable_top'];
         $enableBottom = $payload['enable_bottom'];
         $enableColorAdjust = $payload['enable_coloradjust'];
         $endFrame = $payload['end_frame'];
-        $startFrames = DkvideoHelper::computeStartFrames($payload['start_frame'], $payload['time_alignment']);
-        $startFrames = implode("_", $startFrames);
+        $startFrames = implode("_", $this->task->startFrames());
         $cmdFormat = "../../build/bin/test_render_stereo_panorama ".
-                      "-uuid %s ".
+                      "-task_uuid %s ".
                       "-video_dir %s ".
                       "-output_dir %s ".
                       "-ring_rectify_file %s ".
@@ -76,7 +79,7 @@ class VideoSwitch implements ShouldQueue
                       "-enable_coloradjust %s ".
                       "-start_frames %s ".
                       "-end_frame %s";
-        $cmd = printf($cmdFormat, $uuid, $videoDir, $outputDir,
+        $cmd = sprintf($cmdFormat, $uuid, $videoDir, $outputDir,
                       $ringRectifyFile, $topRectifyFile, $bottomRectifyFile, $mixRectifyFile, $cameraSettingFile,
                       $enableTop, $enableBottom, $enableColorAdjust, $startFrames, $endFrame);
         return $cmd;
