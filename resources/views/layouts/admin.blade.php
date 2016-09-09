@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
+<div class="container-fluid">
     <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-3 col-lg-2">
             <div class="panel panel-default">
                 <div class="panel-heading">功能导航</div>
                 <ul class="list-group">
@@ -12,7 +12,7 @@
                 </ul>
             </div>
         </div>
-        <div class="col-md-9">
+        <div class="col-md-9 col-lg-10">
             @yield('body')
         </div>
     </div>
