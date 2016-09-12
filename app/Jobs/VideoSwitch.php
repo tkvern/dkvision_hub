@@ -46,7 +46,6 @@ class VideoSwitch implements ShouldQueue
     }
 
     private function generateCmdFromTask() {
-        $uuid = $this->task['uuid'];
         $payload = $this->task['payload'];
         $videoDir = $payload['video_dir'];
         $outputDir = $this->task->outputDir();
@@ -79,7 +78,7 @@ class VideoSwitch implements ShouldQueue
                       "-start_frame %s ".
                       "-end_frame %s ".
                       "-time_alignment %s ";
-        $cmd = sprintf($cmdFormat, $uuid, $videoDir, $outputDir,
+        $cmd = sprintf($cmdFormat, $videoDir, $outputDir,
                       $ringRectifyFile, $topRectifyFile, $bottomRectifyFile, $mixRectifyFile, $cameraSettingFile,
                       $enableTop, $enableBottom, $enableColorAdjust, $startFrame, $endFrame, $time_alignment);
         return $cmd;
