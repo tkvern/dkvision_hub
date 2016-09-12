@@ -88,5 +88,39 @@ class VideoSwitch implements ShouldQueue
         $this->task->status = $status;
         $this->task->processed = 100;
         $this->task->save();
+        if ($this->task->parent_id !== 0) {
+            $this->updateParentStatus();
+        }
+    }
+
+    private function updateParentStatus() {
+        $parentTask = $this->task->parentTask();
+        if($this->task->status !== Task::ERROR && $this->task->staus !== Task::FINISH) {
+            if($this->task->status === Task::RUNNING && $parentTask->status !== Task::RUNNING) {
+                $parentTask->status = Task::RUNNING;
+                $parentTask->save();
+                return;
+            }
+        }
+        $subTasks = $parentTask->subTasks();
+        $finished = 0;
+        $failed = 0;
+        $running = 0;
+        foreach($subTasks as $task) {
+            if($task->status === Task::FINISH) {
+                $finished += 1;
+            } elseif($task->status === Task::ERROR) {
+                $failed += 1;
+            } else {
+                $running += 1;
+            }
+        }
+        if(count($subTasks) === $finished) {
+            $parentTask->status = Task::FINISH;
+            $parentTask->save();
+        } elseif(count($subTasks) === $failed + $finished) {
+            $parentTask->status = Task::ERROR;
+            $parentTask->save();
+        }
     }
 }
