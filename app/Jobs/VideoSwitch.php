@@ -50,9 +50,9 @@ class VideoSwitch implements ShouldQueue
         $payload = $this->task['payload'];
         $videoDir = $payload['video_dir'];
         $outputDir = $this->task->outputDir();
-        if(! file_exists($outputDir)) {
-            mkdir($outputDir, 0777, true);
-        }
+//        if(! file_exists($outputDir)) {
+//            mkdir($outputDir, 0777, true);
+//        }
         $snDir = $this->task->configDir();
         $ringRectifyFile = "$snDir/ring_rectify.xml";
         $cameraSettingFile = "$snDir/camera_setting.xml";
@@ -62,10 +62,10 @@ class VideoSwitch implements ShouldQueue
         $enableTop = $payload['enable_top'];
         $enableBottom = $payload['enable_bottom'];
         $enableColorAdjust = $payload['enable_coloradjust'];
+        $startFrame = $payload['start_frame'];
         $endFrame = $payload['end_frame'];
-        $startFrames = implode("_", $this->task->startFrames());
-        $cmdFormat = config('task.exec_path').
-                      "-task_uuid %s ".
+        $time_alignment = implode('_', $payload['time_alignment']);
+        $cmdFormat = config('task.exec_path')." ".
                       "-video_dir %s ".
                       "-output_dir %s ".
                       "-ring_rectify_file %s ".
@@ -76,16 +76,18 @@ class VideoSwitch implements ShouldQueue
                       "-enable_top %s ".
                       "-enable_bottom %s ".
                       "-enable_coloradjust %s ".
-                      "-start_frames %s ".
-                      "-end_frame %s";
+                      "-start_frame %s ".
+                      "-end_frame %s ".
+                      "-time_alignment %s ";
         $cmd = sprintf($cmdFormat, $uuid, $videoDir, $outputDir,
                       $ringRectifyFile, $topRectifyFile, $bottomRectifyFile, $mixRectifyFile, $cameraSettingFile,
-                      $enableTop, $enableBottom, $enableColorAdjust, $startFrames, $endFrame);
+                      $enableTop, $enableBottom, $enableColorAdjust, $startFrame, $endFrame, $time_alignment);
         return $cmd;
     }
 
     private function updateTaskStatus($status) {
         $this->task->status = $status;
+        $this->task->processed = 100;
         $this->task->save();
     }
 }

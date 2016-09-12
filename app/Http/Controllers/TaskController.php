@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Requests;
 
 use App\Task;
-use App\Utils\DkvideoHelper;
 
 class TaskController extends Controller
 {

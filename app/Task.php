@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 use App\Utils\DkvideoHelper;
@@ -13,6 +14,12 @@ class Task extends Model
     const FINISH = 3;
     const ERROR = 4;
     const UNKNOWN = 5;
+
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        'processed_at'
+    ];
 
     protected $casts = [
         'payload' => 'array'
@@ -70,11 +77,28 @@ class Task extends Model
         if($this->status === self::WAITING) {
             return $this->_process = 0;
         }
-        $totalFrames = $this->payload['start_frame'] - $this->payload['end_frame'] + 1;
-        $outputDir = $this->outputDir();
-        $finishFrames = directory_file_count($outputDir);
-        return $this->_process = floor($finishFrames*100/$totalFrames);
+        if($this->status === self::ERROR && ! is_null($this->processed_at)) {
+            return $this->_process = $this->processed;
+        }
+        if(! is_null($this->processed_at) && Carbon::now()->diffInSeconds($this->processed_at) < 60) {
+            return $this->_process = $this->processed;
+        }
+        $this->processed = $this->calcProcessing();
+        $this->processed_at = Carbon::now();
+        $this->save();
+        return $this->_process = $this->processed;
     }
+
+    public function calcProcessing() {
+        $totalFrames = $this->payload['end_frame'] - $this->payload['start_frame'] + 1;
+        $targetDir = $this->outputDir()."/left_pano";
+        if (! file_exists($targetDir)) {
+            return 0;
+        }
+        $finishFrames = directory_file_count($targetDir);
+        return floor($finishFrames*100/$totalFrames);
+    }
+
 
     public function outputDir() {
         $outputDir = DkvideoHelper::getOutputDir($this->payload['video_dir']);
