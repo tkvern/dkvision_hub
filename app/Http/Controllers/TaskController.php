@@ -13,7 +13,7 @@ use App\Utils\DkvideoHelper;
 class TaskController extends Controller
 {
     public function index() {
-        $tasks = Auth::user()->tasks()->where('parent_id', 0)->get();
+        $tasks = Auth::user()->tasks()->where('parent_id', 0)->paginate(10);
         return view('task.index', ["tasks" => $tasks]);
     }
 
@@ -51,7 +51,7 @@ class TaskController extends Controller
             $payload['task_type'] = $task_type;
             $task = new Task();
             $task->uuid = uuid1();
-            $task->title = $input['title'].'_'.$task_type;
+            $task->title = $input['title'];
             $task->description = $input['description'];
             $task->task_type = 'videoswitch';
             $task->payload = $payload;
