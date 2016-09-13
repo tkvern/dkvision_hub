@@ -36,7 +36,7 @@ class ReduceStrategy implements  Strategy {
             for($i = $start_frame; $i < $end_frame; $i += $slice) {
                 $tmpPayload = array_copy($payload);
                 $tmpPayload['start_frame'] = $i;
-                $tmpPayload['end_frame'] = $i + $slice >= $end_frame ? $end_frame : $i + $slice -1;
+                $tmpPayload['end_frame'] = $i + $slice >= $end_frame ? $end_frame : $i + $slice + 1;
                 $subTask = $task->replicate(['uuid', 'payload', 'parent_id']);
                 $subTask->uuid = uuid1();
                 $subTask->payload = $tmpPayload;

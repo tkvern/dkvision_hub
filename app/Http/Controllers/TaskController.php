@@ -11,8 +11,12 @@ use App\Task;
 
 class TaskController extends Controller
 {
+    public function __construct() {
+        $this->middleware('auth');
+    }
+
     public function index() {
-        $tasks = Auth::user()->tasks()->where('parent_id', 0)->paginate(10);
+        $tasks = Auth::user()->tasks()->where('parent_id', 0)->orderBy('id', 'desc')->paginate(10);
         return view('task.index', ["tasks" => $tasks]);
     }
 

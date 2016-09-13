@@ -7,6 +7,6 @@
  */
 return [
     'exec_path' => env('TASK_EXEC_PATH', ''),
-    'frame_slice' => env('TASK_FRAME_SLICE', 10),
+    'frame_slice' => env('TASK_FRAME_SLICE', 5),
     'config_path' => env('TASK_CONFIG_PATH', '/data/config/')
 ];
