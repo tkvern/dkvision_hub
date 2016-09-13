@@ -52,7 +52,10 @@ class VideoSwitch implements ShouldQueue
 //        if(! file_exists($outputDir)) {
 //            mkdir($outputDir, 0777, true);
 //        }
-        $snDir = $this->task->configDir();
+        $snDir = $videoDir."/config";
+        if(! file_exists($snDir)) {
+            $snDir = $this->task->configDir();
+        }
         $ringRectifyFile = "$snDir/ring_rectify.xml";
         $cameraSettingFile = "$snDir/camera_setting.xml";
         $topRectifyFile = "$snDir/top_rectify.xml";
