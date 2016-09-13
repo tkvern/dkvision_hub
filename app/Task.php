@@ -105,7 +105,7 @@ class Task extends Model
         if($this->parent_id === 0) {
             $outputDir .= '/'.$this->uuid;
         } else {
-            $outputDir .= '/'.$this->parentTask()->uuid;
+            $outputDir .= '/'.$this->parentTask()->first()->uuid;
         }
         return $outputDir;
     }
