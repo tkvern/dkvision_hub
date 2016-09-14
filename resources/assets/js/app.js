@@ -18,3 +18,17 @@ require('./bootstrap');
 // const app = new Vue({
 //     el: 'body'
 // });
+
+$(document).ready(function () {
+    // body...
+    $('#autotime').on('click', function(e) {
+        if($('#configtime').val() == "") {
+          return;
+        }
+        var time = $('#configtime').val().split('_');
+        var alignment = $("input[name='payload[time_alignment][]']");
+        for(var i=0; i < time.length; i ++ ) {
+          alignment[i].value = time[i];
+        }
+    })
+});
