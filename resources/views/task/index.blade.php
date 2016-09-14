@@ -67,7 +67,7 @@
                             </tbody>
                         </table>
                         <div class="pull-right">
-                            {{ $tasks->links() }}
+                            {!! $tasks->appends(['all' => $all])->render() !!}
                         </div>
                     </div>
                 </div>

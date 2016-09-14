@@ -15,9 +15,15 @@ class TaskController extends Controller
         $this->middleware('auth');
     }
 
-    public function index() {
-        $tasks = Auth::user()->tasks()->where('parent_id', 0)->orderBy('id', 'desc')->paginate(10);
-        return view('task.index', ["tasks" => $tasks]);
+    public function index(Request $request) {
+//        if(is_true($request->query('all'))) {
+//            $resource = Task::query();
+//        } else {
+//            $resource = Auth::user()->tasks();
+//        }
+        $resource = Task::query();
+        $tasks = $resource->where('parent_id', 0)->orderBy('id', 'desc')->paginate(10);
+        return view('task.index', ['tasks' => $tasks, 'all' => $request->query('all')]);
     }
 
     public function show(Request $request, $task_id) {
