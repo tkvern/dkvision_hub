@@ -24,3 +24,4 @@ Route::get('home', 'HomeController@index');
 Route::get('tasks', 'TaskController@index');
 Route::get('tasks/create', 'TaskController@create');
 Route::post('tasks', 'TaskController@store');
+Route::get('tasks/{task_id}/retry', 'TaskController@retry');

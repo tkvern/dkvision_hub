@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\VideoSwitch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -49,6 +50,24 @@ class TaskController extends Controller
         ]);
         $tasks = $this->createTasks($request->input());
         $this->enQueueTasks($tasks);
+        return redirect()->action('TaskController@index');
+    }
+
+    public function retry(Request $request, $task_id) {
+        $task = Task::where('id', $task_id)->first();
+        $count = $task->subTasks()->count();
+        if($count === 0) {
+            $task->status = Task::WAITING;
+            $task->save();
+            dispatch((new VideoSwitch($task))->onQueue('videos'));
+        } else {
+            $subTasks = $task->subTasks()->get();
+            foreach ($subTasks as $_task) {
+                $_task->status = Task::WAITING;
+                $_task->save();
+                dispatch((new VideoSwitch($_task))->onQueue('videos'));
+            }
+        }
         return redirect()->action('TaskController@index');
     }
 
