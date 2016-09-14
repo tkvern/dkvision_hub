@@ -7,6 +7,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Task;
+use League\Flysystem\Exception;
 
 class VideoSwitch implements ShouldQueue
 {
@@ -43,6 +44,10 @@ class VideoSwitch implements ShouldQueue
         } else {
             $this->updateTaskStatus(Task::ERROR);
         }
+    }
+
+    public function failed(Exception $e) {
+        $this->updateTaskStatus(Task::ERROR);
     }
 
     private function generateCmdFromTask() {
