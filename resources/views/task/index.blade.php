@@ -24,7 +24,7 @@
                         <table class="table table-bordered table-hover">
                             <thead>
                             <tr>
-                                <th>ID</th>
+                                <th>UUID</th>
                                 <th>名称</th>
                                 <th>类型</th>
                                 <th>进度</th>
@@ -35,7 +35,10 @@
                             <tbody>
                             @foreach($tasks as $task)
                                 <tr>
-                                    <td class="ellipsis">{{ $task->id }}</td>
+                                    <td class="ellipsis"
+                                            data-toggle="tooltip" data-placement="left" title="{{ $task->uuid }}">
+                                        {{ str_limit($task->uuid, 8, '') }}
+                                    </td>
                                     <td class="ellipsis"> {{ $task->title }} </td>
                                     <td class="ellipsis"> {{ $task->payload['task_type'] === 'preview' ? '预览' : $task->payload['task_type'] }} </td>
                                     <td>
@@ -51,12 +54,14 @@
                                     <td>
                                         <div class="btn-group btn-group-xs btn-group-justified">
                                             <a href="#" class="btn btn-default" role="button">详情</a>
-                                            <div class="btn-group btn-group-xs">
+                                            <div class="btn-group btn-group-xs" id="more">
                                                 <a href="#" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                                                     更多 <span class="caret"></span>
                                                 </a>
                                                 <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                                                    <li><a href="#">删除</a></li>
+                                                    <li>
+                                                        <a class="delete" href="#" data-target="{{ url('/tasks', ['task_id' => $task->id]) }}">删除</a>
+                                                    </li>
                                                     <li><a href="#">停止</a></li>
                                                 </ul>
                                             </div>
@@ -74,4 +79,43 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('page_js')
+<script>
+    $(document).ready(function () {
+        $('[data-toggle=tooltip]').tooltip({container: 'body'});
+        $('#more a.delete').on('click', function () {
+            var url = $(this).data('target');
+            swal({
+                    title: "",
+                    text: "你确认要删除该任务吗?",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonClass: "btn-danger",
+                    cancelButtonText: "取消",
+                    confirmButtonText: "确认",
+                    closeOnConfirm: false,
+                    showLoaderOnConfirm: true
+                },
+                function(){
+                    $.ajax({
+                        url: url,
+                        type: 'DELETE',
+                        dataType: 'json',
+                        data: {
+                            _method: 'delete'
+                        },
+                        success: function(data) {
+                            if(data.err_code == '0') {
+                                window.location.reload();
+                            } else {
+                                swal("糟糕", data.err_ssg, "error" );
+                            }
+                        }
+                    })
+                });
+        });
+    });
+</script>
 @endsection

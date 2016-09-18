@@ -154,7 +154,7 @@
                 </div>
 
                 <div class="form-group">
-                    <div class="col-md-8 col-md-offset-3">
+                    <div class="col-md-8 col-md-offset-2">
                         <button type="submit" class="btn btn-primary">
                             提交任务
                         </button>
@@ -175,4 +175,21 @@
             </ul>
         </div>
     @endif
+@endsection
+
+@section('page_js')
+<script>
+    $(document).ready(function () {
+        $('#autotime').on('click', function(e) {
+            if($('#configtime').val() == "") {
+              return;
+            }
+            var time = $('#configtime').val().split('_');
+            var alignment = $("input[name='payload[time_alignment][]']");
+            for(var i=0; i < time.length; i ++ ) {
+              alignment[i].value = time[i];
+            }
+        })
+    });
+</script>
 @endsection

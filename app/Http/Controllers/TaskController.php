@@ -53,8 +53,26 @@ class TaskController extends Controller
         return redirect()->action('TaskController@index');
     }
 
-    public function retry(Request $request, $task_id) {
-        $task = Task::where('id', $task_id)->first();
+    public function destroy($task_id) {
+        $task = Task::find($task_id);
+        if($task->creator_id !== auth()->user()->id) {
+            return response()->json([
+                'err_code' => '100',
+                'err_msg' => '没有权限'
+            ]);
+        }
+        if($task->subTasks()->count() > 0) {
+            $task->subTasks()->delete();
+        }
+        $task->delete();
+        return response()->json([
+            'err_code' => '0',
+            'err_msg' => 'SUCCESS'
+        ]);
+    }
+
+    public function retry($task_id) {
+        $task = Task::find($task_id);
         $count = $task->subTasks()->count();
         if($count === 0) {
             $task->status = Task::WAITING;
