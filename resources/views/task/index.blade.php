@@ -13,8 +13,18 @@
             <div class="row">
                 <div class="col-md-12">
                     <a href="{{ url('/tasks/create') }}" class="btn btn-default" title="添加">
-                        <span class="glyphicon glyphicon-plus"></span>
+                        <span class="glyphicon glyphicon-plus">添加任务</span>
                     </a>
+                    <div class="pull-right">
+                        <div class="btn-group">
+                            <a href="{{ url('/tasks') }}" title="我的任务" class="btn btn-default {{ active_or_not(!$all) }}">
+                                我的任务
+                            </a>
+                            <a href="{{ url('/tasks') }}?all=yes" title="全部任务" class="btn btn-default {{ active_or_not($all) }}">
+                                全部任务
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
             <br>
@@ -52,15 +62,16 @@
                                     </td>
                                     <td>{!! $task->status_label() !!}</td>
                                     <td>
-                                        <div class="btn-group btn-group-xs btn-group-justified">
-                                            <a href="#" class="btn btn-default" role="button">详情</a>
-                                            <div class="btn-group btn-group-xs" id="more">
-                                                <a href="#" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                                    更多 <span class="caret"></span>
-                                                </a>
-                                                <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="{{ url('tasks', [$task->id]) }}" class="btn btn-default" role="button">详情</a>
+                                            <div class="btn-group btn-group-sm" id="more">
+                                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                                    更多
+                                                    <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu" role="menu">
                                                     <li>
-                                                        <a class="delete" href="#" data-target="{{ url('/tasks', ['task_id' => $task->id]) }}">删除</a>
+                                                        <a class="delete" href="#" data-target="{{ url('/tasks', [$task->id]) }}">删除</a>
                                                     </li>
                                                     <li><a href="#">停止</a></li>
                                                 </ul>
@@ -89,7 +100,7 @@
             var url = $(this).data('target');
             swal({
                     title: "",
-                    text: "你确认要删除该任务吗?",
+                    text: "确认删除任务?",
                     type: "warning",
                     showCancelButton: true,
                     confirmButtonClass: "btn-danger",
@@ -110,7 +121,7 @@
                             if(data.err_code == '0') {
                                 window.location.reload();
                             } else {
-                                swal("糟糕", data.err_ssg, "error" );
+                                swal("糟糕", data.err_msg, "error");
                             }
                         }
                     })

@@ -17,18 +17,14 @@ class TaskController extends Controller
     }
 
     public function index(Request $request) {
-//        if(is_true($request->query('all'))) {
-//            $resource = Task::query();
-//        } else {
-//            $resource = Auth::user()->tasks();
-//        }
+        if(is_true($request->query('all'))) {
+            $resource = Task::query();
+        } else {
+            $resource = Auth::user()->tasks();
+        }
         $resource = Task::query();
         $tasks = $resource->where('parent_id', 0)->orderBy('id', 'desc')->paginate(10);
         return view('task.index', ['tasks' => $tasks, 'all' => $request->query('all')]);
-    }
-
-    public function show(Request $request, $task_id) {
-        return view('task.show');
     }
 
     public function create() {
@@ -51,6 +47,11 @@ class TaskController extends Controller
         $tasks = $this->createTasks($request->input());
         $this->enQueueTasks($tasks);
         return redirect()->action('TaskController@index');
+    }
+
+    public function show($task_id) {
+        $task = Task::find($task_id);
+        return view('task.show', ['task' => $task]);
     }
 
     public function destroy($task_id) {

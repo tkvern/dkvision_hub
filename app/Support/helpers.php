@@ -92,3 +92,9 @@ if(! function_exists('is_true')) {
     }
 }
 
+if(! function_exists('active_or_not')) {
+    function active_or_not($value) {
+        return is_true($value) ? 'active' : '';
+    }
+}
+
