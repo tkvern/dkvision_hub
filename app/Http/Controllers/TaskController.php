@@ -91,7 +91,7 @@ class TaskController extends Controller
 
     private function createTasks($input) {
         $tasks = [];
-        $task_types = $input['task_types'];
+        $task_types = array_reverse($input['task_types']);
         foreach($task_types as $task_type) {
             $payload = array_copy($input['payload']);
             $payload['task_type'] = $task_type;

@@ -78,6 +78,7 @@ Trait TaskCommand {
         $paramsArr['start_frame'] = $payload['start_frame'];
         $paramsArr['end_frame'] = $payload['end_frame'];
         $paramsArr['time_alignment'] = implode('_', $payload['time_alignment']);
+        $paramsArr['camera_ring_radius'] = 15;
         return $paramsArr;
     }
 
@@ -89,7 +90,7 @@ Trait TaskCommand {
                 $parameters = [
                     'video_dir', 'output_dir', 'ring_rectify_file', 'top_rectify_file', 'bottom_rectify_file',
                     'mix_rectify_file', 'camera_setting_file', 'enable_top', 'enable_bottom', 'enable_coloradjust',
-                    'start_frame', 'end_frame', 'time_alignment'
+                    'start_frame', 'end_frame', 'time_alignment', 'camera_ring_radius'
                 ];
                 break;
             case '2D':
