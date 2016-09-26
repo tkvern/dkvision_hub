@@ -13,9 +13,9 @@ Trait TaskCommand {
     public function outputDir() {
         $outputDir = DkvideoHelper::getOutputDir($this->payload['video_dir']);
         if($this->parent_id === 0) {
-            $outputDir .= '/'.$this->uuid;
+            $outputDir  = join_paths($outputDir, $this->uuid);
         } else {
-            $outputDir .= '/'.$this->parentTask()->first()->uuid;
+            $outputDir = join_paths($outputDir, $this->parentTask()->first()->uuid);
         }
         return $outputDir;
     }
@@ -23,10 +23,7 @@ Trait TaskCommand {
     public function configDir() {
         $snDir = DkvideoHelper::evalSerialNumberDir($this->payload['video_dir']);
         $base = config('task.config_dir');
-        if(substr($base, strlen($base) - 1) !== '/') {
-            $base .= '/';
-        }
-        return $base.$snDir;
+        return join_paths($base, $snDir);
     }
 
     public function cmdString() {
@@ -34,7 +31,7 @@ Trait TaskCommand {
         $requiredParams = $this->cmdRequiredParameters();
         $cmd = [$this->execPath()];
         foreach ($requiredParams as $param) {
-            $cmd = "$param {$allParams[$param]}";
+            $cmd[] = "-$param {$allParams[$param]}";
         }
         $cmd = implode(' ', $cmd);
         return $cmd;
@@ -56,7 +53,7 @@ Trait TaskCommand {
                 $execPath = 'test_2d_fast';
                 break;
         }
-        $execPath = config('task.bin_path').'/'.$execPath;
+        $execPath = join_paths(config('task.bin_path'), $execPath);
         return $execPath;
     }
 
@@ -66,15 +63,15 @@ Trait TaskCommand {
         $payload = $this->payload;
         $paramsArr['video_dir'] = $payload['video_dir'];
         $paramsArr['output_dir'] = $this->outputDir();
-        $snDir = $videoDir."/config";
+        $snDir = join_paths($payload['video_dir'], 'config');
         if(! file_exists($snDir)) {
             $snDir = $this->configDir();
         }
         $paramsArr['ring_rectify_file'] = "$snDir/ring_rectify.xml";
         $paramsArr['camera_setting_file'] = "$snDir/camera_setting.xml";
-        $paramsArr['top_rectify_file'] = "$snDir/top_rectify_file.xml";
-        $paramsArr['bottom_rectify_file'] = "$snDir/bottom_rectify_file.xml";
-        $paramsArr['mix_rectify_file'] = "$snDir/mix_rectify_file.xml";
+        $paramsArr['top_rectify_file'] = "$snDir/top_rectify.xml";
+        $paramsArr['bottom_rectify_file'] = "$snDir/bottom_rectify.xml";
+        $paramsArr['mix_rectify_file'] = "$snDir/mix_rectify.xml";
         $paramsArr['enable_top'] = $payload['enable_top'];
         $paramsArr['enable_bottom'] = $payload['enable_bottom'];
         $paramsArr['enable_coloradjust'] = $payload['enable_coloradjust'];
