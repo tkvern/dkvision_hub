@@ -50,7 +50,7 @@
                                         {{ str_limit($task->uuid, 8, '') }}
                                     </td>
                                     <td class="ellipsis"> {{ $task->title }} </td>
-                                    <td class="ellipsis"> {{ $task->payload['task_type'] === 'preview' ? '预览' : $task->payload['task_type'] }} </td>
+                                    <td class="ellipsis"> {{ $task->payload['task_type'] === '2D_Fast' ? '预览' : $task->payload['task_type'] }} </td>
                                     <td>
                                         <div class="progress" style="min-width: 200px; margin-bottom: 0px;">
                                             <div class="progress-bar progress-bar-{{ $task->status_class() }}" role="progressbar"
