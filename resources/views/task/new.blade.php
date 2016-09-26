@@ -5,7 +5,7 @@
         <div class="panel-heading">
             <ol class="breadcrumb">
                 <li><a href="{{ url('/home') }}">控制台</a></li>
-                <li><a href="{{ url('/task') }}">任务管理</a></li>
+                <li><a href="{{ url('/tasks') }}">任务管理</a></li>
                 <li class="active">添加任务</li>
             </ol>
         </div>
@@ -14,22 +14,22 @@
             <form class="form-horizontal" role="form" method="POST" action="{{ url('/tasks') }}">
                 {{ csrf_field() }}
 
+                <div class="form-group{{ $errors->has('payload.video_dir') ? ' has-error' : '' }}">
+                    <label for="payload_video_dir" class="col-md-2 control-label">视频路径</label>
+
+                    <div class="col-md-8">
+                        <input id="payload_video_dir" type="text" class="form-control"
+                               name="payload[video_dir]" placeholder="例如: /data/path"
+                               value="{{ old('payload.video_dir') }}"
+                               autocomplete="off" required>
+                    </div>
+                </div>
+
                 <div class="form-group{{ $errors->has('title') ? ' has-error' : '' }}">
                     <label for="title" class="col-md-2 control-label">任务名</label>
 
                     <div class="col-md-8">
                         <input id="title" type="text" class="form-control" name="title" value="{{ old('title') }}" required autofocus autocomplete="off">
-                    </div>
-                </div>
-
-                <div class="form-group{{ $errors->has('payload.video_dir') ? ' has-error' : '' }}">
-                    <label for="payload[video_dir]" class="col-md-2 control-label">视频路径</label>
-
-                    <div class="col-md-8">
-                        <input id="payload[video_dir]" type="text" class="form-control"
-                               name="payload[video_dir]" placeholder="例如: /data/path"
-                               value="{{ old('payload.video_dir') }}"
-                               autocomplete="off" required>
                     </div>
                 </div>
 
@@ -131,15 +131,17 @@
                 <div class="form-group{{ $errors->has('task_types') ? ' has-error' : '' }}">
                     <label for="task_types" class="col-md-2 control-label">类型</label>
                     <div class="col-md-8">
-                        </label>
                         <label class="checkbox-inline">
                             <input type="checkbox" name="task_types[]" value="3D" checked> 3D
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" name="task_types[]" value="3D_Fast"> 3D_Fast
                         </label>
                         <label class="checkbox-inline">
                             <input type="checkbox" name="task_types[]" value="2D"> 2D
                         </label>
                         <label class="checkbox-inline">
-                            <input type="checkbox" name="task_types[]" value="preview"> 预览
+                            <input type="checkbox" name="task_types[]" value="2D_Fast"> 预览
                         </label>
                     </div>
                 </div>
@@ -189,7 +191,18 @@
             for(var i=0; i < time.length; i ++ ) {
               alignment[i].value = time[i];
             }
-        })
+        });
+        (function() {
+            var originVal = '';
+            $('#payload_video_dir').on('focus', function () {
+                originVal = $(this).val();
+            })
+            $('#payload_video_dir').on('blur', function() {
+                if(originVal == $('#title').val() || ($('#title').val() == '' && $('#payload_video_dir').val() != '')) {
+                    $('#title').val($('#payload_video_dir').val());
+                }
+            });
+        })();
     });
 </script>
 @endsection
