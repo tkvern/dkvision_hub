@@ -36,7 +36,7 @@ class VideoSwitch implements ShouldQueue
             return;
         }
         $this->updateTaskStatus(Task::RUNNING);
-        $cmd = $this->generateCmdFromTask();
+        $cmd = $this->task->cmdString();
         info("exec: $cmd");
         system($cmd, $exit_code);
         if($exit_code === 0) {
@@ -48,48 +48,6 @@ class VideoSwitch implements ShouldQueue
 
     public function failed(Exception $e) {
         $this->updateTaskStatus(Task::ERROR);
-    }
-
-    private function generateCmdFromTask() {
-        $payload = $this->task['payload'];
-        $videoDir = $payload['video_dir'];
-        $outputDir = $this->task->outputDir();
-//        if(! file_exists($outputDir)) {
-//            mkdir($outputDir, 0777, true);
-//        }
-        $snDir = $videoDir."/config";
-        if(! file_exists($snDir)) {
-            $snDir = $this->task->configDir();
-        }
-        $ringRectifyFile = "$snDir/ring_rectify.xml";
-        $cameraSettingFile = "$snDir/camera_setting.xml";
-        $topRectifyFile = "$snDir/top_rectify.xml";
-        $bottomRectifyFile = "$snDir/bottom_rectify.xml";
-        $mixRectifyFile = "$snDir/mix_rectify.xml";
-        $enableTop = $payload['enable_top'];
-        $enableBottom = $payload['enable_bottom'];
-        $enableColorAdjust = $payload['enable_coloradjust'];
-        $startFrame = $payload['start_frame'];
-        $endFrame = $payload['end_frame'];
-        $time_alignment = implode('_', $payload['time_alignment']);
-        $cmdFormat = config('task.exec_path')." ".
-                      "-video_dir %s ".
-                      "-output_dir %s ".
-                      "-ring_rectify_file %s ".
-                      "-top_rectify_file %s ".
-                      "-bottom_rectify_file %s ".
-                      "-mix_rectify_file %s ".
-                      "-camera_setting_file %s ".
-                      "-enable_top %s ".
-                      "-enable_bottom %s ".
-                      "-enable_coloradjust %s ".
-                      "-start_frame %s ".
-                      "-end_frame %s ".
-                      "-time_alignment %s ";
-        $cmd = sprintf($cmdFormat, $videoDir, $outputDir,
-                      $ringRectifyFile, $topRectifyFile, $bottomRectifyFile, $mixRectifyFile, $cameraSettingFile,
-                      $enableTop, $enableBottom, $enableColorAdjust, $startFrame, $endFrame, $time_alignment);
-        return $cmd;
     }
 
     private function updateTaskStatus($status) {

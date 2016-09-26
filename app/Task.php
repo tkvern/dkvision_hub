@@ -5,10 +5,12 @@ namespace App;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
-use App\Utils\DkvideoHelper;
+use App\Traits\TaskCommand;
 
 class Task extends Model
 {
+    use TaskCommand;
+
     const WAITING = 1;
     const RUNNING = 2;
     const FINISH = 3;
@@ -99,27 +101,4 @@ class Task extends Model
         return floor($finishFrames*100/$totalFrames);
     }
 
-
-    public function outputDir() {
-        $outputDir = DkvideoHelper::getOutputDir($this->payload['video_dir']);
-        if($this->parent_id === 0) {
-            $outputDir .= '/'.$this->uuid;
-        } else {
-            $outputDir .= '/'.$this->parentTask()->first()->uuid;
-        }
-        return $outputDir;
-    }
-
-    public function startFrames() {
-        return DkvideoHelper::computeStartFrames($this->payload['start_frame'], $this->payload['time_alignment']);
-    }
-
-    public function configDir() {
-        $snDir = DkvideoHelper::evalSerialNumberDir($this->payload['video_dir']);
-        $base = config('task.config_dir');
-        if(substr($base, strlen($base) - 1) !== '/') {
-            $base .= '/';
-        }
-        return $base.$snDir;
-    }
 }
