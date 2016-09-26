@@ -21,7 +21,7 @@
                         <input id="payload_video_dir" type="text" class="form-control"
                                name="payload[video_dir]" placeholder="例如: /data/path"
                                value="{{ old('payload.video_dir') }}"
-                               autocomplete="off" required>
+                               autocomplete="off" required autofocus>
                     </div>
                 </div>
 
@@ -29,7 +29,7 @@
                     <label for="title" class="col-md-2 control-label">任务名</label>
 
                     <div class="col-md-8">
-                        <input id="title" type="text" class="form-control" name="title" value="{{ old('title') }}" required autofocus autocomplete="off">
+                        <input id="title" type="text" class="form-control" name="title" value="{{ old('title') }}" required autocomplete="off">
                     </div>
                 </div>
 
