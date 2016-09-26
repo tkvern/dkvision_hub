@@ -39,7 +39,7 @@ class VideoSwitch implements ShouldQueue
         $cmd = $this->task->cmdString();
         info("exec: $cmd");
         $exit_code = 0;
-        //system($cmd, $exit_code);
+        system($cmd, $exit_code);
         if($exit_code === 0) {
             $this->updateTaskStatus(Task::FINISH);
         } else {
