@@ -22,7 +22,6 @@ class TaskController extends Controller
         } else {
             $resource = Auth::user()->tasks();
         }
-        $resource = Task::query();
         $tasks = $resource->where('parent_id', 0)->orderBy('id', 'desc')->paginate(10);
         return view('task.index', ['tasks' => $tasks, 'all' => $request->query('all')]);
     }
