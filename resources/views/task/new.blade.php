@@ -128,8 +128,23 @@
                     </div>
                 </div>
 
+                <div class="form-group{{ $errors->has('payload.camera_type') ? ' has-error' : '' }}">
+                    <label for="payload[camera_type]" class="col-md-2 control-label">相机类型</label>
+                    <div class="col-md-8">
+                        <label class="radio-inline">
+                            <input type="radio" name="payload[camera_type]" value="GOPRO" checked> GOPRO
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="payload[camera_type]" value="BMPCC"> BMPCC
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="payload[camera_type]" value="AURA"> AURA
+                        </label>
+                    </div>
+                </div>
+
                 <div class="form-group{{ $errors->has('task_types') ? ' has-error' : '' }}">
-                    <label for="task_types" class="col-md-2 control-label">类型</label>
+                    <label for="task_types" class="col-md-2 control-label">任务类型</label>
                     <div class="col-md-8">
                         <label class="checkbox-inline">
                             <input type="checkbox" name="task_types[]" value="3D" checked> 3D

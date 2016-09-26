@@ -41,6 +41,7 @@ class TaskController extends Controller
             "payload.enable_bottom" => "required",
             "payload.enable_coloradjust" => "required",
             "payload.quality" => "required",
+            "payload.camera_type" => "required",
             "task_types" => "required|array"
         ]);
         $tasks = $this->createTasks($request->input());

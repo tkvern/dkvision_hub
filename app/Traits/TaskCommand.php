@@ -78,7 +78,7 @@ Trait TaskCommand {
         $paramsArr['start_frame'] = $payload['start_frame'];
         $paramsArr['end_frame'] = $payload['end_frame'];
         $paramsArr['time_alignment'] = implode('_', $payload['time_alignment']);
-        $paramsArr['camera_ring_radius'] = 15;
+        $paramsArr['camera_ring_radius'] = DkvideoHelper::cameraRingRadius($payload['camera_type']);
         return $paramsArr;
     }
 

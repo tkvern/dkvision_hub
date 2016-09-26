@@ -54,5 +54,21 @@ class DkvideoHelper {
                 return false;
         }
     }
+
+    public static function cameraRingRadius($camera_type) {
+        $radius = 15;
+        switch(strtoupper($camera_type)) {
+            case 'GOPRO':
+                $radius = 15;
+                break;
+            case 'BMPCC':
+                $radius = 13.5;
+                break;
+            case 'AURA':
+                $radius = 25;
+                break;
+        }
+        return $radius;
+    }
 }
 ?>
