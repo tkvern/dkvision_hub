@@ -44,7 +44,7 @@ class VideoSwitch implements ShouldQueue
             info("result: $last_line");
             $this->updateTaskStatus(Task::FINISH);
         } else {
-            error("error: $last_line");
+            info("error: $last_line");
             $this->updateTaskStatus(Task::ERROR);
         }
     }
