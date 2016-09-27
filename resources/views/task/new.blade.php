@@ -201,9 +201,10 @@
             if($('#configtime').val() == "") {
               return;
             }
-            var time = $('#configtime').val().split('_');
+            var time = $('#configtime').val().split(/[ ,_]/).filter(function(item) { return item != ''});
             var alignment = $("input[name='payload[time_alignment][]']");
-            for(var i=0; i < time.length; i ++ ) {
+            var minLength = time.length > alignment.length ? alignment.length : time.length;
+            for(var i = 0; i < minLength; i ++ ) {
               alignment[i].value = time[i];
             }
         });
