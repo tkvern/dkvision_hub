@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use App\Jobs\VideoSwitch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use DB;
 
 use App\Http\Requests;
-
 use App\Task;
 
 class TaskController extends Controller
@@ -51,7 +51,17 @@ class TaskController extends Controller
 
     public function show($task_id) {
         $task = Task::find($task_id);
-        return view('task.show', ['task' => $task]);
+        $statistics = DB::table('tasks')
+                        ->select('status', DB::raw('count(*) as status_count'))
+                        ->where('parent_id', $task_id)
+                        ->groupBy('status')
+                        ->get();
+        $counts = ['all' => 0, 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0];
+        foreach ($statistics as $stat) {
+            $counts[$stat->status] = $stat->status_count;
+            $counts['all'] += $stat->status_count;
+        }
+        return view('task.show', ['task' => $task, 'counts' => $counts]);
     }
 
     public function destroy($task_id) {
@@ -74,6 +84,12 @@ class TaskController extends Controller
 
     public function retry($task_id) {
         $task = Task::find($task_id);
+        if($task->creator_id !== auth()->user()->id) {
+            return response()->json([
+                'err_code' => '100',
+                'err_msg' => '没有权限'
+            ]);
+        }
         $count = $task->subTasks()->count();
         if($count === 0) {
             $task->status = Task::WAITING;
@@ -87,7 +103,10 @@ class TaskController extends Controller
                 dispatch((new VideoSwitch($_task))->onQueue('videos'));
             }
         }
-        return redirect()->action('TaskController@index');
+        return response()->json([
+            'err_code' => '0',
+            'err_msg' => 'SUCCESS'
+        ]);
     }
 
     private function createTasks($input) {

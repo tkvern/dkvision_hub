@@ -73,7 +73,7 @@
                                                     <li>
                                                         <a class="delete" href="#" data-target="{{ url('/tasks', [$task->id]) }}">删除</a>
                                                     </li>
-                                                    <li><a href="#">停止</a></li>
+                                                    <li><a class="retry" href="#" data-target="/tasks/{{ $task->id }}/retry">重试</a></li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -126,6 +126,38 @@
                         }
                     })
                 });
+        });
+        $('#more a.retry').on('click', function() {
+            var url = $(this).data('target');
+            swal({
+                    title: "",
+                    text: "确认重试任务?",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonClass: "btn-danger",
+                    cancelButtonText: "取消",
+                    confirmButtonText: "确认",
+                    closeOnConfirm: false,
+                    showLoaderOnConfirm: true
+                },
+                function(){
+                    $.ajax({
+                        url: url,
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            force:  false
+                        },
+                        success: function(data) {
+                            if(data.err_code == '0') {
+                                window.location.reload();
+                            } else {
+                                swal("糟糕", data.err_msg, "error");
+                            }
+                        }
+                    })
+                }
+            );
         });
     });
 </script>
