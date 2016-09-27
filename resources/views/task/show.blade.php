@@ -12,37 +12,119 @@
 
         <div class="panel-body">
             <div class="row">
-            <dl class="col-md-offset-1 col-md-10">
-                <dt>基本信息</dt>
-                <dd>
-                    <div class="row">
-                        <div class="col-md-4">任务编号: {{ $task->id }}</div>
-                        <div class="col-md-4">任务名: {{ $task->title }}</div>
-                        <div class="col-md-4">创建时间: {{ $task->created_at }}</div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-4">任务类型: {{ $task->payload['task_type'] }}</div>
-                        <div class="col-md-4">UUID: {{ $task->uuid }}</div>
-                        <div class="col-md-4">更新时间: {{ $task->updated_at }}</div>
-                    </div>
-                </dd>
-                <br/>
-                <dt>参数信息</dt>
-                <dd>
-                    <div class="row">
-                        <div class="col-md-12">视频目录: {{ $task->payload['video_dir'] }}</div>
-                        <div class="col-md-4">起始帧: {{ $task->payload['start_frame'] }} - {{ $task->payload['end_frame'] }}</div>
-                        <div class="col-md-8">帧同步: {{ implode(', ', $task->payload['time_alignment']) }}</div>
-                        <div class="col-md-4">顶部: {{ $task->payload['enable_top'] }}</div>
-                        <div class="col-md-4">底部: {{ $task->payload['enable_bottom'] }}</div>
-                        <div class="col-md-4">颜色调整: {{ $task->payload['enable_coloradjust'] }}</div>
-                        <div class="col-md-4">质量: {{ $task->payload['quality'] }}</div>
-                    </div>
-                </dd>
-                <br/>
-                <dt>子任务信息</dt>
-                <dd></dd>
-            </dl>
+                <div class="col-md-10 col-md-offset-1">
+                    <table class="table table-bordered">
+                      <tbody>
+                        <tr>
+                          <th colspan="2">基本信息</th>
+                        </tr>
+                        <tr>
+                          <td class="text-right">任务编号</td>
+                          <td>{{ $task->id }}</td>
+                        </tr>
+                        <tr>
+                          <td class="text-right">任务名</td>
+                          <td>{{ $task->title }}</td>
+                        </tr>
+                        <tr>
+                          <td class="text-right">创建时间</td>
+                          <td>{{ $task->created_at }}</td>
+                        </tr>
+                        <tr>
+                          <td class="text-right">更新时间</td>
+                          <td>{{ $task->updated_at }}</td>
+                        </tr>
+                        <tr>
+                          <td class="text-right">任务类型</td>
+                          <td>{{ $task->payload['task_type'] }}</td>
+                        </tr>
+                        <tr>
+                          <td class="text-right">UUID</td>
+                          <td>{{ $task->uuid }}</td>
+                        </tr>
+                        <tr>
+                          <th colspan="2">参数信息</th>
+                        </tr>
+                        <tr>
+                          <td class="text-right">视频目录</td>
+                          <td>{{ $task->payload['video_dir'] }}</td>
+                        </tr>
+                        <tr>
+                          <td class="text-right">起始帧-结束桢</td>
+                          <td>{{ $task->payload['start_frame'] }} - {{ $task->payload['end_frame'] }}</td>
+                        </tr>
+                        <tr>
+                          <td class="text-right">帧同步</td>
+                          <td>{{ implode(', ', $task->payload['time_alignment']) }}</td>
+                        </tr>
+                        <tr>
+                          <td class="text-right">顶部</td>
+                          <td>{{ $task->payload['enable_top'] }}</td>
+                        </tr>
+                        <tr>
+                          <td class="text-right">底部</td>
+                          <td>{{ $task->payload['enable_bottom'] }}</td>
+                        </tr>
+                        <tr>
+                          <td class="text-right">颜色调整</td>
+                          <td>{{ $task->payload['enable_coloradjust'] }}</td>
+                        </tr>
+                        <tr>
+                          <td class="text-right">质量</td>
+                          <td>{{ $task->payload['quality'] }}</td>
+                        </tr>
+                        <tr>
+                          <th colspan="2">子任务信息</th>
+                        </tr>
+                        <tr>
+                          <td class="text-right">总数</td>
+                          <td>10</td>
+                        </tr>
+                        <tr>
+                          <td class="text-right">完成</td>
+                          <td>2</td>
+                        </tr>
+                        <tr>
+                          <td class="text-right">运行中</td>
+                          <td>2</td>
+                        </tr>
+                        <tr>
+                          <td class="text-right">等待中</td>
+                          <td>7</td>
+                        </tr>
+                        <tr>
+                          <td class="text-right">失败</td>
+                          <td>0</td>
+                        </tr>
+                        <tr>
+                          <td class="text-right">未知</td>
+                          <td>0</td>
+                        </tr>
+                        <tr>
+                          <td class="text-right">进度预览</td>
+                          <td>
+                                <div class="progress">
+                                    <div class="progress-bar progress-bar-success" style="width: 5%">
+                                         <span class="sr-only">35% Complete (success)</span>
+                                    </div>
+                                    <div class="progress-bar progress-bar-info" style="width: 5%">
+                                         <span class="sr-only">35% Complete (info)</span>
+                                    </div>
+                                    <div class="progress-bar progress-bar-primary" style="width: 5%">
+                                         <span class="sr-only">35% Complete (primary)</span>
+                                    </div>
+                                    <div class="progress-bar progress-bar-danger" style="width: 0%">
+                                        <span class="sr-only">10% Complete (danger)</span>
+                                    </div>
+                                    <div class="progress-bar progress-bar-warning" style="width: 0%">
+                                        <span class="sr-only">20% Complete (warning)</span>
+                                    </div>
+                                </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
