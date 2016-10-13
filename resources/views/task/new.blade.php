@@ -53,12 +53,9 @@
                     <label for="payload[time_alignment]" class="col-md-2 control-label">时间同步</label>
 
                     <div class="col-md-8">
-                        <div class="input-group">
-                            <input type="text" class="form-control" id="configtime" placeholder="以下滑线分割填写时间同步可自动识别">
-                            <span class="input-group-btn">
-                          <button class="btn btn-default" type="button" id="autotime">自动识别</button>
-                      </span>
-                        </div>
+                        <textarea class="form-control" id="configtime" rows="8" placeholder="以下滑线分割填写时间同步可自动识别"></textarea>
+                        <button class="btn btn-default" type="button" id="autotime">自动识别</button>
+                            
                     </div>
                 </div>
                 <div class="form-group{{ $errors->has('payload.time_alignment') ? ' has-error' : '' }}">
@@ -201,7 +198,15 @@
             if($('#configtime').val() == "") {
               return;
             }
-            var time = $('#configtime').val().split(/[ ,_]/).filter(function(item) { return item != ''});
+            var time = $('#configtime').val()
+                                        .split(/[,_\n]/)
+                                        .filter(function(item) { 
+                                            return item != ''
+                                        })
+                                        .map(function(item) {
+                                            return item.split(':')[1].trim();
+                                        });
+            console.log(time);
             var alignment = $("input[name='payload[time_alignment][]']");
             var minLength = time.length > alignment.length ? alignment.length : time.length;
             for(var i = 0; i < minLength; i ++ ) {
