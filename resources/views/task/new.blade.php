@@ -201,8 +201,19 @@
             if($('#configtime').val() == "") {
               return;
             }
-            var time = $('#configtime').val().split(/[ ,_]/).filter(function(item) { return item != ''});
+            var time = $('#configtime').val()
+                                        .split(/[ ,_]/)
+                                        .filter(function(item) { 
+                                            return item != ''
+                                        })
+                                        .map(function(item) {
+                                            if (item.indexOf(':') > 0) {
+                                                return item.split(':')[1].trim();
+                                            }
+                                            return item.trim();
+                                        });
             var alignment = $("input[name='payload[time_alignment][]']");
+            alignment.val('0');
             var minLength = time.length > alignment.length ? alignment.length : time.length;
             for(var i = 0; i < minLength; i ++ ) {
               alignment[i].value = time[i];
