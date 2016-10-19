@@ -25,6 +25,17 @@
                     </div>
                 </div>
 
+                <div class="form-group{{ $errors->has('payload.output_dir') ? ' has-error' : '' }}">
+                    <label for="payload_output_dir" class="col-md-2 control-label">输出路径</label>
+
+                    <div class="col-md-8">
+                        <input id="payload_output_dir" type="text" class="form-control"
+                               name="payload[output_dir]" placeholder="例如: /data/path"
+                               value="{{ old('payload.output_dir') }}"
+                               autocomplete="off" required autofocus>
+                    </div>
+                </div>
+
                 <div class="form-group{{ $errors->has('title') ? ' has-error' : '' }}">
                     <label for="title" class="col-md-2 control-label">任务名</label>
 
@@ -144,16 +155,19 @@
                     <label for="task_types" class="col-md-2 control-label">任务类型</label>
                     <div class="col-md-8">
                         <label class="checkbox-inline">
-                            <input type="checkbox" name="task_types[]" value="3D" checked> 3D
+                            <input type="checkbox" name="task_types[]" value="VISIONDK_3D" > VISIONDK_3D
                         </label>
                         <label class="checkbox-inline">
-                            <input type="checkbox" name="task_types[]" value="3D_Fast"> 3D_Fast
+                            <input type="checkbox" name="task_types[]" value="VISIONDK_2D"> VISIONDK_2D
                         </label>
                         <label class="checkbox-inline">
-                            <input type="checkbox" name="task_types[]" value="2D"> 2D
+                            <input type="checkbox" name="task_types[]" value="FACEBOOK_3D"> FACEBOOK_3D
                         </label>
                         <label class="checkbox-inline">
-                            <input type="checkbox" name="task_types[]" value="2D_Fast"> 预览
+                            <input type="checkbox" name="task_types[]" value="FACEBOOK_2D"> FACEBOOK_2D
+                        </label>
+                        <label class="checkbox-inline">
+                            <input type="checkbox" name="task_types[]" value="PREVIEW" checked> PREVIEW
                         </label>
                     </div>
                 </div>

@@ -55,20 +55,35 @@ class DkvideoHelper {
         }
     }
 
-    public static function cameraRingRadius($camera_type) {
-        $radius = 15;
-        switch(strtoupper($camera_type)) {
-            case 'GOPRO':
-                $radius = 15;
-                break;
-            case 'BMPCC':
-                $radius = 13.5;
-                break;
-            case 'AURA':
-                $radius = 25;
-                break;
-        }
+    public static function cameraRingRadius($cameraType, $renderType) {
+        $radius = null;
+        if ($renderType === 'FACEBOOK_2D') {
+            $radius = 10000;
+        } elseif ($renderType === 'FACEBOOK_3D') {
+            switch(strtoupper($cameraType)) {
+                case 'BMPCC':
+                    $radius = 19;
+                    break;
+                case 'GOPRO':
+                    $radius = 15;
+                    break;
+                default:
+                    $radius = 13;
+            }
+        } 
         return $radius;
+    }
+
+    public static function cameraSaveType($camera_type) {
+        $saveType = '';
+        switch(strtoupper($camera_type)) {
+            case 'BMPCC':
+                $saveType = '.tiff';
+                break;
+            default:
+                $saveType = '.jpg';
+        }
+        return $saveType;
     }
 }
 ?>

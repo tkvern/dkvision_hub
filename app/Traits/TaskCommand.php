@@ -11,6 +11,9 @@ use App\Utils\DkvideoHelper;
 
 Trait TaskCommand {
     public function outputDir() {
+        if (!empty($payload['output_dir'])) {
+            return $payload['output_dir'];
+        }
         $outputDir = DkvideoHelper::getOutputDir($this->payload['video_dir']);
         if($this->parent_id === 0) {
             $outputDir  = join_paths($outputDir, $this->uuid);
@@ -38,22 +41,25 @@ Trait TaskCommand {
     }
 
     private function execPath() {
-        $execPath = '';
+        $execBin = '';
         switch ($this->payload['task_type']) {
-            case '3D':
-                $execPath = 'test_3d';
+            case 'VISIONDK_3D':
+                $execBin = 'test_3d_visiondk';
                 break;
-            case '3D_Fast':
-                $execPath = 'test_3d_fast';
+            case 'VISIONDK_2D':
+                $execBin = 'test_2d_visiondk';
                 break;
-            case '2D':
-                $execPath = 'test_2d';
+            case 'FACEBOOK_3D':
+                $execBin = 'test_3d_facebook';
                 break;
-            case '2D_Fast':
-                $execPath = 'test_2d_fast';
+            case 'FACEBOOK_2D':
+                $execBin = 'test_2d_facebook';
+                break;
+            default:
+                $execBin = 'test_preview';
                 break;
         }
-        $execPath = join_paths(config('task.bin_path'), $execPath);
+        $execPath = join_paths(config('task.bin_path'), $execBin);
         return $execPath;
     }
 
@@ -78,33 +84,36 @@ Trait TaskCommand {
         $paramsArr['start_frame'] = $payload['start_frame'];
         $paramsArr['end_frame'] = $payload['end_frame'];
         $paramsArr['time_alignment'] = implode('_', $payload['time_alignment']);
-        $paramsArr['camera_ring_radius'] = DkvideoHelper::cameraRingRadius($payload['camera_type']);
+        $paramsArr['camera_ring_radius'] = DkvideoHelper::cameraRingRadius($payload['camera_type'],
+                                             $payload['task_type']);
+        $paramsArr['save_type'] = DkvideoHelper::cameraSaveType($payload['camera_type']);
         return $paramsArr;
     }
 
     private function cmdRequiredParameters() {
         $parameters = [];
-        switch($this->payload['task_type']) {
-            case '3D':
-            case '3D_Fast':
+        switch(strtoupper($this->payload['task_type'])) {
+            case 'FACEBOOK_3D':
+            case 'FACEBOOK_2D':
                 $parameters = [
-                    'video_dir', 'output_dir', 'ring_rectify_file', 'top_rectify_file', 'bottom_rectify_file',
-                    'mix_rectify_file', 'camera_setting_file', 'enable_top', 'enable_bottom', 'enable_coloradjust',
-                    'start_frame', 'end_frame', 'time_alignment', 'camera_ring_radius'
+                    'video_dir', 'output_dir', 'ring_rectify_file', 'camera_setting_file',
+                    'enable_top', 'enable_bottom', 'enable_coloradjust','start_frame', 
+                    'end_frame', 'time_alignment', 'camera_ring_radius', 'save_type'
                 ];
                 break;
-            case '2D':
+            case 'VISIONDK_3D':
+            case 'VISIONDK_2D':
                 $parameters = [
-                    'video_dir', 'output_dir', 'ring_rectify_file', 'mix_rectify_file', 'camera_setting_file',
-                    'enable_top', 'start_frame', 'end_frame', 'time_alignment'
+                    'video_dir', 'output_dir', 'ring_rectify_file', 'camera_setting_file',
+                    'enable_top', 'enable_bottom', 'enable_coloradjust', 'start_frame', 
+                    'end_frame', 'time_alignment', 'save_type'
                 ];
                 break;
-            case '2D_Fast':
+            default:
                 $parameters = [
                     'video_dir', 'output_dir', 'ring_rectify_file', 'camera_setting_file',
                     'start_frame', 'end_frame', 'time_alignment'
                 ];
-                break;
         }
         return $parameters;
     }
