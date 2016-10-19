@@ -34,6 +34,7 @@ class TaskController extends Controller
         $this->validate($request, [
             "title" => "required",
             "payload.video_dir" => "required",
+            "payload.output_dir" => "required",
             "payload.start_frame" => "required|integer",
             "payload.end_frame" => "required|integer",
             "payload.time_alignment" => "required|array",

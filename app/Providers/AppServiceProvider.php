@@ -16,7 +16,7 @@ class AppServiceProvider extends ServiceProvider
         //
         $this->app->bind(
             'App\Contacts\VideoSwitch\Strategy',
-            'App\Services\VideoSwitch\ReduceStrategy'
+            'App\Services\VideoSwitch\SimpleStrategy'
         );
     }
 
