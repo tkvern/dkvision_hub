@@ -82,7 +82,8 @@ class Task extends Model
         if($this->status === self::ERROR && ! is_null($this->processed_at)) {
             return $this->_process = $this->processed;
         }
-        if(! is_null($this->processed_at) && Carbon::now()->diffInSeconds($this->processed_at) < 60) {
+        if( !is_null($this->processed_at) && 
+                Carbon::now()->diffInSeconds($this->processed_at) < 60) {
             return $this->_process = $this->processed;
         }
         $this->processed = $this->calcProcessing();
@@ -93,7 +94,7 @@ class Task extends Model
 
     public function calcProcessing() {
         $totalFrames = $this->payload['end_frame'] - $this->payload['start_frame'] + 1;
-        $targetDir = $this->outputDir()."/left_pano";
+        $targetDir = join_paths($this->outputDir(), "left_pano");
         if (! file_exists($targetDir)) {
             return 0;
         }

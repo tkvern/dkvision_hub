@@ -11,8 +11,8 @@ use App\Utils\DkvideoHelper;
 
 Trait TaskCommand {
     public function outputDir() {
-        if (!empty($payload['output_dir'])) {
-            return $payload['output_dir'];
+        if (!empty($this->payload['output_dir'])) {
+            return join_paths($this->payload['output_dir'], $this->payload['task_type']);
         }
         $outputDir = DkvideoHelper::getOutputDir($this->payload['video_dir']);
         if($this->parent_id === 0) {
