@@ -58,10 +58,6 @@
                             <td>{{ $task->payload['start_frame'] }} - {{ $task->payload['end_frame'] }}</td>
                         </tr>
                         <tr>
-                            <td class="text-right">帧同步</td>
-                            <td>{{ implode(', ', $task->payload['time_alignment']) }}</td>
-                        </tr>
-                        <tr>
                             <td class="text-right">顶部</td>
                             <td>{{ $task->payload['enable_top'] }}</td>
                         </tr>

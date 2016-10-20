@@ -95,7 +95,7 @@ class Task extends Model
     public function calcProcessing() {
         $totalFrames = $this->payload['end_frame'] - $this->payload['start_frame'] + 1;
         $targetDir = join_paths($this->outputDir(), "left_pano");
-        if (! file_exists($targetDir)) {
+        if (!file_exists($targetDir)) {
             return 0;
         }
         $finishFrames = directory_file_count($targetDir);

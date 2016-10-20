@@ -37,7 +37,6 @@ class TaskController extends Controller
             "payload.output_dir" => "required",
             "payload.start_frame" => "required|integer",
             "payload.end_frame" => "required|integer",
-            "payload.time_alignment" => "required|array",
             "payload.enable_top" => "required",
             "payload.enable_bottom" => "required",
             "payload.enable_coloradjust" => "required",
@@ -94,6 +93,7 @@ class TaskController extends Controller
         $count = $task->subTasks()->count();
         if($count === 0) {
             $task->status = Task::WAITING;
+            $task->processed_at = null;
             $task->save();
             dispatch((new VideoSwitch($task))->onQueue('videos'));
         } else {
@@ -113,8 +113,11 @@ class TaskController extends Controller
     private function createTasks($input) {
         $tasks = [];
         $task_types = array_reverse($input['task_types']);
+        $payload = $input['payload'];
+        $payload['video_dir'] = trim($payload['video_dir']);
+        $payload['output_dir'] = trim($payload['output_dir']);
         foreach($task_types as $task_type) {
-            $payload = array_copy($input['payload']);
+            $payload = array_copy($payload);
             $payload['task_type'] = $task_type;
             $task = new Task();
             $task->uuid = uuid1();

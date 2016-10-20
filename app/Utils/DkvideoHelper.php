@@ -85,5 +85,14 @@ class DkvideoHelper {
         }
         return $saveType;
     }
+
+    public static function cameraSettingName($cameraType, $renderType) {
+        if (strtoupper($renderType) === 'PREVIEW') {
+            return strtolower($cameraType).'_camera_setting_visiondk.xml';
+        }
+        $camera = strtolower($cameraType);
+        $algo = strtolower(explode('_', $renderType)[0]);
+        return "{$camera}_camera_setting_{$algo}.xml";
+    }
 }
 ?>

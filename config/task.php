@@ -6,7 +6,7 @@
  * Time: 下午5:19
  */
 return [
-    'bin_path' => env('TASK_BIN_PATH'),
+    'visiondk_bin' => env('TASK_VISIONDK_BIN'),
     'frame_slice' => env('TASK_FRAME_SLICE', 200),
-    'config_path' => env('TASK_CONFIG_PATH', '/data/config/')
+    'visiondk_setting_path' => env('TASK_VISIONDK_SETTING_PATH')
 ];

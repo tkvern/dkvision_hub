@@ -60,28 +60,6 @@
                     </div>
                 </div>
 
-                <div class="form-group{{ $errors->has('payload.time_alignment') ? ' has-error' : '' }}">
-                    <label for="payload[time_alignment]" class="col-md-2 control-label">时间同步</label>
-
-                    <div class="col-md-8">
-                        <textarea class="form-control" id="configtime" rows="8" placeholder="以下滑线分割填写时间同步可自动识别"></textarea>
-                        <button class="btn btn-default" type="button" id="autotime">自动识别</button>
-
-                    </div>
-                </div>
-                <div class="form-group{{ $errors->has('payload.time_alignment') ? ' has-error' : '' }}">
-                    <label for="payload[time_alignment]" class="col-md-2 control-label"></label>
-                    <div class="col-md-8 form-group">
-                        @for($i = 0; $i < 20; $i++)
-                            <div class="col-md-3 margin-bottom">
-                                <div class="input-group input-group-sm">
-                                    <div class="input-group-addon">{{ str_pad($i, 2, 0, STR_PAD_LEFT) }}</div>
-                                    <input name="payload[time_alignment][]" class="form-control" type="number" value="0" required>
-                                </div>
-                            </div>
-                        @endfor
-                    </div>
-                </div>
                 <div class="form-group{{ $errors->has('payload.enable_top') ? ' has-error' : '' }}">
                     <label for="payload[enable_top]" class="col-md-2 control-label">顶部</label>
 
@@ -208,25 +186,6 @@
 @section('page_js')
 <script>
     $(document).ready(function () {
-        $('#autotime').on('click', function(e) {
-            if($('#configtime').val() == "") {
-              return;
-            }
-            var time = $('#configtime').val()
-                                        .split(/[,_\n]/)
-                                        .filter(function(item) {
-                                            return item != ''
-                                        })
-                                        .map(function(item) {
-                                            return item.split(' ')[1].trim();
-                                        });
-            var alignment = $("input[name='payload[time_alignment][]']");
-            alignment.val('0');
-            var minLength = time.length > alignment.length ? alignment.length : time.length;
-            for(var i = 0; i < minLength; i ++ ) {
-              alignment[i].value = time[i];
-            }
-        });
         (function() {
             var originVal = '';
             $('#payload_video_dir').on('focus', function () {
