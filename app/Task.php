@@ -29,7 +29,7 @@ class Task extends Model
 
     private $_process;
 
-    public function user() {
+    public function creator() {
         return $this->belongsTo('App\User', 'creator_id');
     }
 
@@ -99,6 +99,7 @@ class Task extends Model
             return 0;
         }
         $finishFrames = directory_file_count($targetDir);
+        info("==$targetDir== state: [$finishFrames/$totalFrames]");
         return floor($finishFrames*100/$totalFrames);
     }
 

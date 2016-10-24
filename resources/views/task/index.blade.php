@@ -34,9 +34,11 @@
                         <table class="table table-bordered table-hover">
                             <thead>
                             <tr>
-                                <th>UUID</th>
+                                <!-- <th>UUID</th> -->
                                 <th>名称</th>
                                 <th>类型</th>
+                                <th>创建人</th>
+                                <th>执行机器IP</th>
                                 <th>进度</th>
                                 <th>状态</th>
                                 <th>操作</th>
@@ -45,12 +47,14 @@
                             <tbody>
                             @foreach($tasks as $task)
                                 <tr>
-                                    <td class="ellipsis"
+                                    <!-- <td class="ellipsis"
                                             data-toggle="tooltip" data-placement="left" title="{{ $task->uuid }}">
                                         {{ str_limit($task->uuid, 8, '') }}
-                                    </td>
+                                    </td> -->
                                     <td class="ellipsis"> {{ $task->title }} </td>
                                     <td class="ellipsis"> {{ $task->payload['task_type'] }} </td>
+                                    <td class="ellipsis"> {{ $task->creator->name }} </td>
+                                    <td class="ellipsis"> {{ $task->exec_ip }} </td>
                                     <td>
                                         <div class="progress" style="min-width: 200px; margin-bottom: 0px;">
                                             <div class="progress-bar progress-bar-{{ $task->status_class() }}" role="progressbar"

@@ -22,7 +22,7 @@ class TaskController extends Controller
         } else {
             $resource = Auth::user()->tasks();
         }
-        $tasks = $resource->where('parent_id', 0)->orderBy('id', 'desc')->paginate(10);
+        $tasks = $resource->with('creator')->where('parent_id', 0)->orderBy('id', 'desc')->paginate(10);
         return view('task.index', ['tasks' => $tasks, 'all' => $request->query('all')]);
     }
 
@@ -84,7 +84,7 @@ class TaskController extends Controller
 
     public function retry($task_id) {
         $task = Task::find($task_id);
-        if(auth()->user()->id !== 1 || $task->creator_id !== auth()->user()->id) {
+        if(auth()->user()->id !== 1 && $task->creator_id !== auth()->user()->id) {
             return response()->json([
                 'err_code' => '100',
                 'err_msg' => '没有权限'

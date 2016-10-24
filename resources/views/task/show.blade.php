@@ -31,12 +31,20 @@
                             <td>{{ $task->title }}</td>
                         </tr>
                         <tr>
+                            <td class="text-right">创建人</td>
+                            <td>{{ $task->creator->name }}</td>
+                        </tr>
+                        <tr>
                             <td class="text-right">相机类型</td>
                             <td>{{ array_get($task->payload, 'camera_type', 'UNKNOWN') }}</td>
                         </tr>
                         <tr>
                             <td class="text-right">任务类型</td>
                             <td>{{ $task->payload['task_type'] }}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-right">当前执行所在机器ip</td>
+                            <td>{{ $task->exec_ip }}</td>
                         </tr>
                         <tr>
                             <td class="text-right">创建时间</td>
@@ -52,6 +60,10 @@
                         <tr>
                             <td class="text-right">视频目录</td>
                             <td>{{ $task->payload['video_dir'] }}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-right">输出目录</td>
+                            <td>{{ $task->outputDir() }}</td>
                         </tr>
                         <tr>
                             <td class="text-right">起始帧-结束桢</td>
