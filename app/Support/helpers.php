@@ -107,3 +107,19 @@ if (!function_exists('join_paths')) {
         return preg_replace('#/+#','/',join('/', $paths));
     }
 }
+
+if (!function_exists('get_server_ips')) {
+    function get_server_ips($localhost=false) {
+        if (PHP_OS === 'Darwin') {
+            exec('/sbin/ifconfig |grep \'inet \'| awk \'{ print $2}\'', $arr);
+        } else {
+            exec('/sbin/ifconfig |grep \'inet \'| awk \'{print $2}\'|awk -F: \'{print $2}\' ',$arr);
+        }
+        if (!$localhost) {
+            $arr = array_values(array_filter($arr, function($ip) {
+                return $ip != '127.0.0.1';
+            }));
+        }
+        return $arr;
+    }
+}

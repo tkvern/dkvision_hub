@@ -35,6 +35,8 @@ class VideoSwitch implements ShouldQueue
         if($this->task->status !== Task::WAITING) {
             return;
         }
+        $ip = get_server_ips()[0];
+        $this->task->exec_ip = $ip;
         $this->updateTaskStatus(Task::RUNNING);
         $cmd = $this->task->cmdString();
         info("exec: $cmd");
@@ -65,7 +67,8 @@ class VideoSwitch implements ShouldQueue
     private function updateParentStatus() {
         $parentTask = $this->task->parentTask()->first();
         if($this->task->status !== Task::ERROR && $this->task->staus !== Task::FINISH) {
-            if($this->task->status === Task::RUNNING && $parentTask->status !== Task::RUNNING) {
+            if($this->task->status === Task::RUNNING 
+                    && $parentTask->status !== Task::RUNNING) {
                 $parentTask->status = Task::RUNNING;
                 $parentTask->save();
                 return;

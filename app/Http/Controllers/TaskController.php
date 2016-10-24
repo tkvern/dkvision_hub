@@ -84,7 +84,7 @@ class TaskController extends Controller
 
     public function retry($task_id) {
         $task = Task::find($task_id);
-        if($task->creator_id !== auth()->user()->id) {
+        if(auth()->user()->id !== 1 || $task->creator_id !== auth()->user()->id) {
             return response()->json([
                 'err_code' => '100',
                 'err_msg' => '没有权限'
