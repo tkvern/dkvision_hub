@@ -55,7 +55,7 @@ Trait TaskCommand {
         $video_dir = $payload['video_dir'];
         $paramsArr['video_dir'] = $payload['video_dir'];
         $paramsArr['output_dir'] = $this->outputDir();
-        $paramsArr['ring_rectify_file'] = join_paths($video_dir, 'config/ring_rectify.xml');
+        $paramsArr['ring_rectify_file'] = join_paths($video_dir, 'ring_rectify.xml');
         $paramsArr['camera_setting_file'] = join_paths(config('task.visiondk_setting_path'), 
             DkvideoHelper::cameraSettingName($payload['camera_type'], $payload['task_type']));
         $paramsArr['enable_top'] = $payload['enable_top'];
