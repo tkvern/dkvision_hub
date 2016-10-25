@@ -74,10 +74,15 @@
                                                     <span class="caret"></span>
                                                 </button>
                                                 <ul class="dropdown-menu" role="menu">
+                                                    @if($task->canDelete())
                                                     <li>
                                                         <a class="delete" href="#" data-target="{{ url('/tasks', [$task->id]) }}">删除</a>
                                                     </li>
+                                                    @endif
+                                                    @if($task->canRetry())
                                                     <li><a class="retry" href="#" data-target="/tasks/{{ $task->id }}/retry">重试</a></li>
+                                                    @endif
+                                                    <li><a class="terminate" href="#" data-target="/tasks/{{ $task->id }}/terminate">终止</a></li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -100,6 +105,7 @@
 <script>
     $(document).ready(function () {
         $('[data-toggle=tooltip]').tooltip({container: 'body'});
+        // 任务删除
         $('#more a.delete').on('click', function () {
             var url = $(this).data('target');
             swal({
@@ -131,11 +137,45 @@
                     })
                 });
         });
+        // 任务重试
         $('#more a.retry').on('click', function() {
             var url = $(this).data('target');
             swal({
                     title: "",
                     text: "确认重试任务?",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonClass: "btn-danger",
+                    cancelButtonText: "取消",
+                    confirmButtonText: "确认",
+                    closeOnConfirm: false,
+                    showLoaderOnConfirm: true
+                },
+                function(){
+                    $.ajax({
+                        url: url,
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            force:  false
+                        },
+                        success: function(data) {
+                            if(data.err_code == '0') {
+                                window.location.reload();
+                            } else {
+                                swal("糟糕", data.err_msg, "error");
+                            }
+                        }
+                    })
+                }
+            );
+        });
+        // 任务终止
+        $('#more a.terminate').on('click', function() {
+            var url = $(this).data('target');
+            swal({
+                    title: "",
+                    text: "确认终止任务?",
                     type: "warning",
                     showCancelButton: true,
                     confirmButtonClass: "btn-danger",

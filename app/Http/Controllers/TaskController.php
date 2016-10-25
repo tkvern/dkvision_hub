@@ -66,31 +66,21 @@ class TaskController extends Controller
 
     public function destroy($task_id) {
         $task = Task::find($task_id);
-        if($task->creator_id !== auth()->user()->id) {
-            return response()->json([
-                'err_code' => '100',
-                'err_msg' => '没有权限'
-            ]);
-        }
+        $this->authorize('delete', $task);
         if($task->subTasks()->count() > 0) {
             $task->subTasks()->delete();
         }
         $task->delete();
-        return response()->json([
-            'err_code' => '0',
-            'err_msg' => 'SUCCESS'
-        ]);
+        return $this->successJsonResponse();
     }
 
     public function retry($task_id) {
         $task = Task::find($task_id);
-        if(auth()->user()->id !== 1 && $task->creator_id !== auth()->user()->id) {
-            return response()->json([
-                'err_code' => '100',
-                'err_msg' => '没有权限'
-            ]);
-        }
+        $this->authorize('retry', $task);
         $count = $task->subTasks()->count();
+        if ($task->canRetry()) {
+            return $this->errorJsonResponse('400.002', '当前状态不允许重试');
+        }
         if($count === 0) {
             $task->status = Task::WAITING;
             $task->processed_at = null;
@@ -104,10 +94,25 @@ class TaskController extends Controller
                 dispatch((new VideoSwitch($_task))->onQueue('videos'));
             }
         }
-        return response()->json([
-            'err_code' => '0',
-            'err_msg' => 'SUCCESS'
-        ]);
+        return $this->successJsonResponse();
+}
+
+    public function terminate($task_id) {
+        $task = Task::find($task_id);
+        $this->authorize('terminate', $task);
+        if ($task->canTerminate()) {
+            return $this->errorJsonResponse('400.001', '当前状态不允许终止');
+        }
+        $bin = basename($task->execPath());
+        $ansible_cmd = "sudo -Hu ansible /usr/local/bin/ansible {$task->exec_ip} ".
+                       "-a 'pkill -u visiondk $bin' -b --become-user=visiondk 2>&1";
+        info("exec: $ansible_cmd");
+        exec($ansible_cmd, $output, $ret);
+        if ($ret != 0) {
+            return $this->errorJsonResponse('500.001', implode('\n', $output));
+        } else {
+            return $this->successJsonResponse();
+        }
     }
 
     private function createTasks($input) {

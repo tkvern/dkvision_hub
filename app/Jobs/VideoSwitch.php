@@ -32,7 +32,7 @@ class VideoSwitch implements ShouldQueue
      */
     public function handle()
     {
-        if($this->task->status !== Task::WAITING) {
+        if(!$this->task || $this->task->status !== Task::WAITING) {
             return;
         }
         $ip = get_server_ips()[0];

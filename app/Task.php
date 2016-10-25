@@ -103,4 +103,19 @@ class Task extends Model
         return floor($finishFrames*100/$totalFrames);
     }
 
+    public function canDelete() {
+        return ($this->status === self::WAITING ||
+                $this->status === self::ERROR ||
+                $this->status === self::FINISH);
+    }
+
+    public function canRetry() {
+        return ($this->status !== self::WAITING || 
+                $this->status !== self::RUNNING);
+    }
+
+    public function canTerminate() {
+        return $this->status !== self::RUNNING;
+    }
+
 }
