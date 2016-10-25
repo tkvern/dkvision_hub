@@ -35,7 +35,7 @@ Trait TaskCommand {
         return $cmd;
     }
 
-    private function execPath() {
+    public function execPath() {
         $execBins = [
             'VISIONDK_3D' => 'test_3d_visiondk',
             'VISIONDK_2D' => 'test_2d_visiondk',

@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Auth\Access\AuthorizationException;
 
 class Handler extends ExceptionHandler
 {
@@ -44,6 +45,9 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        if ($exception instanceof AuthorizationException) {
+            return $this->unauthorized($request, $exception);
+        }
         return parent::render($request, $exception);
     }
 
@@ -57,9 +61,16 @@ class Handler extends ExceptionHandler
     protected function unauthenticated($request, AuthenticationException $exception)
     {
         if ($request->ajax() || $request->expectsJson()) {
-            return response()->json(['error' => 'Unauthenticated.'], 401);
+            return response()->json(['err_code' => '401', 'err_msg' => '用户未认证'], 200);
         }
 
         return redirect()->guest('login');
+    }
+
+    protected function unauthorized($request, AuthorizationException $e)
+    {
+        if ($request->ajax() || $request->expectsJson()) {
+            return response()->json(['err_code' => '403', 'err_msg' => '没有权限'], 200);
+        }
     }
 }

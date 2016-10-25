@@ -30,4 +30,8 @@ class User extends Authenticatable
     public function tasks() {
         return $this->hasMany('App\Task', 'creator_id');
     }
+
+    public function isSuperAdmin() {
+        return $this->is_super;
+    }
 }
