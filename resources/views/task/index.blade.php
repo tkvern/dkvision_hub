@@ -82,7 +82,9 @@
                                                     @if($task->canRetry())
                                                     <li><a class="retry" href="#" data-target="/tasks/{{ $task->id }}/retry">重试</a></li>
                                                     @endif
+                                                    @if($task->canTerminate())
                                                     <li><a class="terminate" href="#" data-target="/tasks/{{ $task->id }}/terminate">终止</a></li>
+                                                    @endif
                                                 </ul>
                                             </div>
                                         </div>

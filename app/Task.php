@@ -115,7 +115,7 @@ class Task extends Model
     }
 
     public function canTerminate() {
-        return $this->status !== self::RUNNING;
+        return $this->status === self::RUNNING;
     }
 
 }

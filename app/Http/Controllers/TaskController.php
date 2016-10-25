@@ -100,7 +100,7 @@ class TaskController extends Controller
     public function terminate($task_id) {
         $task = Task::find($task_id);
         $this->authorize('terminate', $task);
-        if ($task->canTerminate()) {
+        if (!$task->canTerminate()) {
             return $this->errorJsonResponse('400.001', '当前状态不允许终止');
         }
         $bin = basename($task->execPath());
