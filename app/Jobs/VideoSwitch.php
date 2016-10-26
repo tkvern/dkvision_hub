@@ -43,7 +43,7 @@ class VideoSwitch implements ShouldQueue
         $this->task->exec_ip = $ip;
         $this->updateTaskStatus(Task::RUNNING);
         $logFile = join_paths($logDir, "task_{$this->task->id}.log");
-        $cmd = $this->task->cmdString()." 2>&1 >>$logFile";
+        $cmd = $this->task->cmdString()." >>$logFile 2>&1";
         info("exec: $cmd");
         $exit_code = 0;
         $last_line = system($cmd, $exit_code);
