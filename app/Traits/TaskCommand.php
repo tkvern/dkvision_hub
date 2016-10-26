@@ -7,6 +7,7 @@
  */
 namespace  App\Traits;
 
+use DirectoryIterator;
 use App\Utils\DkvideoHelper;
 
 Trait TaskCommand {
@@ -86,7 +87,7 @@ Trait TaskCommand {
         if (!file_exists($targetDir)) {
             return $this->payload['start_frame'];
         }
-        $dirIterator = new DirectoryIterator($dir);
+        $dirIterator = new DirectoryIterator($targetDir);
         $lastFilename = '';
         foreach($dirIterator as $fileInfo) {
             if ($fileInfo->isFile()) {
