@@ -56,7 +56,8 @@ class VideoSwitch implements ShouldQueue
         }
     }
 
-    public function failed(Exception $e) {
+    public function failed($e) {
+        info($e->getMessage());
         $this->updateTaskStatus(Task::ERROR);
     }
 
