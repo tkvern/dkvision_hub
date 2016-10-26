@@ -67,6 +67,9 @@ class TaskController extends Controller
     public function destroy($task_id) {
         $task = Task::find($task_id);
         $this->authorize('delete', $task);
+        if (!$task->canDelete()) {
+            return errorJsonResponse('400.003', '当前状态不允许删除');
+        }
         if($task->subTasks()->count() > 0) {
             $task->subTasks()->delete();
         }
@@ -78,7 +81,7 @@ class TaskController extends Controller
         $task = Task::find($task_id);
         $this->authorize('retry', $task);
         $count = $task->subTasks()->count();
-        if ($task->canRetry()) {
+        if (!$task->canRetry()) {
             return $this->errorJsonResponse('400.002', '当前状态不允许重试');
         }
         if($count === 0) {

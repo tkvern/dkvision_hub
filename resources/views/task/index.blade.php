@@ -74,16 +74,16 @@
                                                     <span class="caret"></span>
                                                 </button>
                                                 <ul class="dropdown-menu" role="menu">
-                                                    @if($task->canDelete())
-                                                    <li>
-                                                        <a class="delete" href="#" data-target="{{ url('/tasks', [$task->id]) }}">删除</a>
-                                                    </li>
-                                                    @endif
                                                     @if($task->canRetry())
                                                     <li><a class="retry" href="#" data-target="/tasks/{{ $task->id }}/retry">重试</a></li>
                                                     @endif
                                                     @if($task->canTerminate())
                                                     <li><a class="terminate" href="#" data-target="/tasks/{{ $task->id }}/terminate">终止</a></li>
+                                                    @endif
+                                                    @if($task->canDelete())
+                                                    <li>
+                                                        <a class="delete" href="#" data-target="{{ url('/tasks', [$task->id]) }}">删除</a>
+                                                    </li>
                                                     @endif
                                                 </ul>
                                             </div>

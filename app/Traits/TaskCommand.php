@@ -61,7 +61,7 @@ Trait TaskCommand {
         $paramsArr['enable_top'] = $payload['enable_top'];
         $paramsArr['enable_bottom'] = $payload['enable_bottom'];
         $paramsArr['enable_coloradjust'] = $payload['enable_coloradjust'];
-        $paramsArr['start_frame'] = $payload['start_frame'];
+        $paramsArr['start_frame'] = $this->findStartFrame();
         $paramsArr['end_frame'] = $payload['end_frame'];
         $paramsArr['time_alignment_file'] = join_paths($payload['video_dir'], 'time.txt');
         $paramsArr['save_type'] = DkvideoHelper::cameraSaveType($payload['camera_type']);
@@ -75,5 +75,32 @@ Trait TaskCommand {
             'start_frame', 'end_frame', 'save_type'
         ];
         return $parameters;
+    }
+
+    private function findStartFrame() {
+        if ($this->payload['task_type'] === 'PREVIEW') {
+            return $this->payload['start_frame'];
+        }
+        $outputDir = $this->outputDir();
+        $targetDir = join_paths($outputDir, 'left_pano');
+        if (!file_exists($targetDir)) {
+            return $this->payload['start_frame'];
+        }
+        $dirIterator = new DirectoryIterator($dir);
+        $lastFilename = '';
+        foreach($dirIterator as $fileInfo) {
+            if ($fileInfo->isFile()) {
+                $filename = $fileInfo->getFilename();
+                if ($filename > $lastFilename) {
+                    $lastFilename = $filename;
+                }
+            }
+        }
+        $number = explode('.', $lastFilename, 2)[0];
+        if (preg_match('/^[0-9]+$/', $number)) {
+            return intval($number);
+        } else {
+            return $this->payload['start_frame'];
+        }
     }
 }
