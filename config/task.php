@@ -8,5 +8,6 @@
 return [
     'visiondk_bin' => env('TASK_VISIONDK_BIN'),
     'frame_slice' => env('TASK_FRAME_SLICE', 200),
-    'visiondk_setting_path' => env('TASK_VISIONDK_SETTING_PATH')
+    'visiondk_setting_path' => env('TASK_VISIONDK_SETTING_PATH'),
+    'log_dir' => env('TASK_LOG_DIR', '/tmp/task_logs')
 ];

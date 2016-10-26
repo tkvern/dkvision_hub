@@ -32,13 +32,18 @@ class VideoSwitch implements ShouldQueue
      */
     public function handle()
     {
-        if(!$this->task || $this->task->status !== Task::WAITING) {
+        if (!$this->task || $this->task->status !== Task::WAITING) {
             return;
+        }
+        $logDir = config('task.log_dir');
+        if (!file_exists($logDir)) {
+            mkdir($logDir);
         }
         $ip = get_server_ips()[0];
         $this->task->exec_ip = $ip;
         $this->updateTaskStatus(Task::RUNNING);
-        $cmd = $this->task->cmdString();
+        $logFile = join_paths($logDir, "task_{$this->task->id}.log");
+        $cmd = $this->task->cmdString()." 2>&1 >>$logFile";
         info("exec: $cmd");
         $exit_code = 0;
         $last_line = system($cmd, $exit_code);
