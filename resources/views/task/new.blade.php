@@ -18,10 +18,15 @@
                     <label for="payload_video_dir" class="col-md-2 control-label">视频路径</label>
 
                     <div class="col-md-8">
-                        <input id="payload_video_dir" type="text" class="form-control"
-                               name="payload[video_dir]" placeholder="例如: /data/path"
-                               value="{{ old('payload.video_dir') }}"
-                               autocomplete="off" required autofocus>
+                        <div class="input-group">
+                            <input id="payload_video_dir" type="text" class="form-control"
+                                   name="payload[video_dir]" placeholder="例如: /data/path"
+                                   value="{{ old('payload.video_dir') }}"
+                                   autocomplete="on" required autofocus>
+                            <span class="input-group-btn">
+                                <button id="windows_dir_reload" class="btn btn-default" type="button">转换路径</button>
+                            </span>
+                        </div>
                     </div>
                 </div>
 
@@ -32,7 +37,7 @@
                         <input id="payload_output_dir" type="text" class="form-control"
                                name="payload[output_dir]" placeholder="例如: /data/path"
                                value="{{ old('payload.output_dir') }}"
-                               autocomplete="off" required autofocus>
+                               autocomplete="on" required autofocus>
                     </div>
                 </div>
 
@@ -48,7 +53,7 @@
                     <label for="payload[start_frame]" class="col-md-2 control-label">开始桢</label>
 
                     <div class="col-md-8">
-                        <input id="payload[start_frame]" type="number" class="form-control" name="payload[start_frame]" value="0" required>
+                        <input id="payload[start_frame]" type="number" class="form-control" name="payload[start_frame]" value="0" autocomplete="off" required>
                     </div>
                 </div>
 
@@ -56,7 +61,7 @@
                     <label for="payload[end_frame]" class="col-md-2 control-label">结束桢</label>
 
                     <div class="col-md-8">
-                        <input id="payload[end_frame]" type="number" class="form-control" name="payload[end_frame]" value="0" required>
+                        <input id="payload[end_frame]" type="number" class="form-control" name="payload[end_frame]" value="0" autocomplete="off" required>
                     </div>
                 </div>
 
@@ -187,14 +192,31 @@
 <script>
     $(document).ready(function () {
         (function() {
-            var originVal = '';
-            $('#payload_video_dir').on('focus', function () {
-                originVal = $(this).val();
-            })
-            $('#payload_video_dir').on('blur', function() {
-                if(originVal == $('#title').val() || ($('#title').val() == '' && $('#payload_video_dir').val() != '')) {
-                    $('#title').val($('#payload_video_dir').val());
+            var originVal = '',
+                pre_path = '\/dkvision';
+            $('#windows_dir_reload').on('click', function() {
+                var payload_video_dir = $('#payload_video_dir').val(),
+                    windows_path = new RegExp(/\w:+?\\+?([^\:\?"\<\>\|\.\\\/]+?[\\\b]{0,1})+?/),
+                    input_path,
+                    output_path;
+                if (windows_path.test(payload_video_dir)) {
+                    input_path = payload_video_dir.slice(payload_video_dir.indexOf(':') + 1);
+                } else {
+                    input_path = payload_video_dir;
                 }
+                input_path = input_path.split(/[\\/]/)
+                                       .length > 2 ? input_path
+                                       .split(/[\\/]/)
+                                       .join('\/') : input_path;
+
+                output_path = input_path.indexOf('data') > -1 ? input_path
+                                            .replace('data', 'output') : input_path;
+
+                input_path.indexOf(pre_path) < 0 ? input_path = pre_path + input_path : input_path;
+                output_path.indexOf(pre_path) < 0 ? output_path = pre_path + output_path : output_path;
+
+                $('#payload_video_dir').val(input_path);
+                $('#payload_output_dir').val(output_path);
             });
         })();
     });
