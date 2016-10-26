@@ -88,7 +88,7 @@ class DkvideoHelper {
 
     public static function cameraSettingName($cameraType, $renderType) {
         if (strtoupper($renderType) === 'PREVIEW') {
-            return strtolower($cameraType).'_camera_setting_visiondk.xml';
+            return strtolower($cameraType).'_camera_setting_facebook.xml';
         }
         $camera = strtolower($cameraType);
         $algo = strtolower(explode('_', $renderType)[0]);
