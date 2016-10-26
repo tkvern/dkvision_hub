@@ -108,7 +108,7 @@ class TaskController extends Controller
         }
         $bin = basename($task->execPath());
         $ansible_cmd = "sudo -Hu ansible /usr/local/bin/ansible {$task->exec_ip} ".
-                       "-a 'pkill -u visiondk $bin' -b --become-user=visiondk 2>&1";
+                       "-a 'pkill -nfu visiondk $bin' -b --become-user=visiondk 2>&1";
         info("exec: $ansible_cmd");
         exec($ansible_cmd, $output, $ret);
         if ($ret != 0) {
