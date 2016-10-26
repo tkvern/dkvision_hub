@@ -98,7 +98,7 @@ Trait TaskCommand {
         }
         $number = explode('.', $lastFilename, 2)[0];
         if (preg_match('/^[0-9]+$/', $number)) {
-            return intval($number);
+            return intval($number) - 1;
         } else {
             return $this->payload['start_frame'];
         }
