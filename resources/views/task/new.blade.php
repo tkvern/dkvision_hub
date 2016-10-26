@@ -11,7 +11,16 @@
         </div>
 
         <div class="panel-body">
-            <form class="form-horizontal" role="form" method="POST" action="{{ url('/tasks') }}">
+           @if (count($errors) > 0)
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+            @endif
+        <form class="form-horizontal" role="form" method="POST" action="{{ url('/tasks') }}">
                 {{ csrf_field() }}
 
                 <div class="form-group{{ $errors->has('payload.video_dir') ? ' has-error' : '' }}">
@@ -177,15 +186,7 @@
             </form>
         </div>
     </div>
-    @if (count($errors) > 0)
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+   
 @endsection
 
 @section('page_js')

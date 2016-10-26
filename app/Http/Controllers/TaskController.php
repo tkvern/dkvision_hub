@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Jobs\VideoSwitch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use DB;
 
 use App\Http\Requests;
@@ -31,19 +32,7 @@ class TaskController extends Controller
     }
 
     public function store(Request $request) {
-        $this->validate($request, [
-            "title" => "required",
-            "payload.video_dir" => "required",
-            "payload.output_dir" => "required",
-            "payload.start_frame" => "required|integer",
-            "payload.end_frame" => "required|integer",
-            "payload.enable_top" => "required",
-            "payload.enable_bottom" => "required",
-            "payload.enable_coloradjust" => "required",
-            "payload.quality" => "required",
-            "payload.camera_type" => "required",
-            "task_types" => "required|array"
-        ]);
+        $this->validator($request)->validate();
         $tasks = $this->createTasks($request->input());
         $this->enQueueTasks($tasks);
         return redirect()->action('TaskController@index');
@@ -146,5 +135,27 @@ class TaskController extends Controller
         array_map(function($task) {
             app()->make('App\Contacts\VideoSwitch\Strategy')->handle($task);
         }, $tasks);
+    }
+
+    private function validator($request) {
+        $validator = Validator::make($request->all(), [
+            "title" => "required",
+            "payload.video_dir" => "required",
+            "payload.output_dir" => "required",
+            "payload.start_frame" => "required|integer",
+            "payload.end_frame" => "required|integer",
+            "payload.enable_top" => "required",
+            "payload.enable_bottom" => "required",
+            "payload.enable_coloradjust" => "required",
+            "payload.quality" => "required",
+            "payload.camera_type" => "required",
+            "task_types" => "required|array"
+        ]);
+        $validator->after(function($validator) use ($request) {
+            if(!file_exists($request->input('payload.video_dir'))) {
+                $validator->errors()->add('payload.video', '视频路径不存在');
+            }
+        });
+        return $validator;
     }
 }
