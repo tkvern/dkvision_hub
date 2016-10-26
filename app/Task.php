@@ -110,7 +110,7 @@ class Task extends Model
     }
 
     public function canRetry() {
-        return ($this->status !== self::WAITING || 
+        return ($this->status !== self::WAITING && 
                 $this->status !== self::RUNNING);
     }
 
