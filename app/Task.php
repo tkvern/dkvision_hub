@@ -17,6 +17,30 @@ class Task extends Model
     const ERROR = 4;
     const UNKNOWN = 5;
 
+    public static $RENDER_TYPE = [
+        'VISIONDK_3D' => 'VISIONDK_3D', 
+        'VISIONDK_2D' => 'VISIONDK_2D', 
+        'FACEBOOK_3D' => 'FACEBOOK_3D', 
+        'FACEBOOK_2D' => 'FACEBOOK_2D', 
+        'PREVIEW' => 'PREVIEW'
+    ];
+
+    public static $ALL_STATUS = [
+        Task::WAITING => "等待中",
+        Task::RUNNING => "运行中",
+        Task::FINISH => "完成",
+        Task::ERROR => "失败",
+        Task::UNKNOWN => "未知"
+    ];
+
+    public static $STATUS_CLASS = [
+        Task::WAITING => "primary",
+        Task::RUNNING => "info",
+        Task::FINISH => "success",
+        Task::ERROR => "danger",
+        Task::UNKNOWN => "warning"
+    ];
+
     protected $dates = [
         'created_at',
         'updated_at',
@@ -42,25 +66,11 @@ class Task extends Model
     }
 
     public function human_status() {
-        static $human_readings = [
-            Task::WAITING => "等待中",
-            Task::RUNNING => "运行中",
-            Task::FINISH => "完成",
-            Task::ERROR => "失败",
-            Task::UNKNOWN => "未知"
-        ];
-        return array_get($human_readings, $this->status, "未知");
+        return array_get(self::$ALL_STATUS, $this->status, "未知");
     }
 
     public function status_class() {
-        static $status_classes = [
-            Task::WAITING => "primary",
-            Task::RUNNING => "info",
-            Task::FINISH => "success",
-            Task::ERROR => "danger",
-            Task::UNKNOWN => "warning"
-        ];
-        return array_get($status_classes, $this->status, "warning");
+        return array_get(self::$STATUS_CLASS, $this->status, "warning");
     }
 
     public function status_label() {

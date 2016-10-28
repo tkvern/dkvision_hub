@@ -16,14 +16,48 @@
                         <span class="glyphicon glyphicon-plus">添加任务</span>
                     </a>
                     <div class="pull-right">
-                        <div class="btn-group">
-                            <a href="{{ url('/tasks') }}" title="我的任务" class="btn btn-default {{ active_or_not(!$all) }}">
-                                我的任务
-                            </a>
-                            <a href="{{ url('/tasks') }}?all=yes" title="全部任务" class="btn btn-default {{ active_or_not($all) }}">
-                                全部任务
-                            </a>
-                        </div>
+                        <form class="form-inline" 
+                                id="filterForm" 
+                                role="form" 
+                                action="/tasks" 
+                                method="get">
+                            <div class="form-group">
+                                <label for="status" class="sr-only">任务状态</label>
+                                <select class="form-control" name="all">
+                                    <option value="no" 
+                                            {{ option_seleted(!is_true($filterKeys['all'])) }}
+                                    >
+                                        我的任务
+                                    </option>
+                                    <option value="yes" 
+                                            {{ option_seleted(is_true($filterKeys['all'])) }}
+                                    >
+                                        全部任务
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="status" class="sr-only">任务状态</label>
+                                <select class="form-control" name="status">
+                                    <option value="">所有状态</option>
+                                    @foreach(App\Task::$ALL_STATUS as $type => $value)
+                                    <option value="{{ $type }}"
+                                            {{ option_seleted("$type" === $filterKeys['status']) }}>
+                                    {{ $value }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="key" class="sr-only">key</label>
+                                <input class="form-control" 
+                                        type="text" 
+                                        name="key"
+                                        value="{{ $filterKeys['key'] }}" 
+                                        placeholder="输入任务名进行搜索">
+                            </div>
+                            <button type="submit" class="btn btn-default">Go</button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -94,7 +128,7 @@
                             </tbody>
                         </table>
                         <div class="pull-right">
-                            {!! $tasks->appends(['all' => $all])->render() !!}
+                            {!! $tasks->appends($filterKeys)->render() !!}
                         </div>
                     </div>
                 </div>
@@ -106,6 +140,14 @@
 @section('page_js')
 <script>
     $(document).ready(function () {
+        $('#filterForm select').on('change', function() {
+            $('#filterForm').submit();
+        });
+        $('#filterForm input[name=key]').on('keyup', function(e) {
+            if (e.keyCode == 13) {
+                $('#filterForm').submit();
+            }
+        });
         $('[data-toggle=tooltip]').tooltip({container: 'body'});
         // 任务删除
         $('#more a.delete').on('click', function () {
