@@ -18,13 +18,26 @@ class TaskController extends Controller
     }
 
     public function index(Request $request) {
-        if(is_true($request->query('all'))) {
-            $resource = Task::query();
-        } else {
-            $resource = Auth::user()->tasks();
+        $filterKeys = [
+            'all' => $request->query('all'), 
+            'status' => $request->query('status'), 
+            'key' => $request->query('key')
+        ];
+        $resource = Task::query();
+        if (!is_true($filterKeys['all'])) {
+            $resource = $resource->where('creator_id', Auth::user()->id);
+        } 
+        if (!empty($filterKeys['status'])) {
+            $resource = $resource->where('status', $filterKeys['status']);
         }
-        $tasks = $resource->with('creator')->where('parent_id', 0)->orderBy('id', 'desc')->paginate(10);
-        return view('task.index', ['tasks' => $tasks, 'all' => $request->query('all')]);
+        if (!empty($filterKeys['key'])) {
+            $resource = $resource->where('title', 'like', "%{$filterKeys['key']}%");
+        }
+        $tasks = $resource->with('creator')
+                          ->where('parent_id', 0)
+                          ->orderBy('id', 'desc')
+                          ->paginate(10);
+        return view('task.index', ['tasks' => $tasks, 'filterKeys' => $filterKeys]);
     }
 
     public function create() {

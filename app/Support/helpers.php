@@ -70,7 +70,7 @@ if(! function_exists('transaction_save_many')) {
     }
 }
 
-if(! function_exists('array_copy')) {
+if(!function_exists('array_copy')) {
     /**
      * 数组浅拷贝
      * @param array $arr
@@ -95,6 +95,12 @@ if(! function_exists('is_true')) {
 if(! function_exists('active_or_not')) {
     function active_or_not($value) {
         return is_true($value) ? 'active' : '';
+    }
+}
+
+if(!function_exists('option_selected')) {
+    function option_seleted($selected) {
+        return $selected ? 'selected' : '';
     }
 }
 
