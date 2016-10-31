@@ -87,7 +87,7 @@ class Task extends Model
             return $this->_process = 100;
         }
         if($this->status === self::WAITING) {
-            return $this->_process = 0;
+            return $this->_process = $this->processed;
         }
         if($this->status === self::ERROR && ! is_null($this->processed_at)) {
             return $this->_process = $this->processed;
@@ -120,8 +120,7 @@ class Task extends Model
     }
 
     public function canRetry() {
-        return ($this->status !== self::WAITING && 
-                $this->status !== self::RUNNING);
+        return ($this->status !== self::WAITING);
     }
 
     public function canTerminate() {
