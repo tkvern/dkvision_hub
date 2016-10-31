@@ -62,6 +62,9 @@
 
                             <ul class="dropdown-menu" role="menu">
                                 <li>
+                                    <a href="/user/profile">账号信息</a>
+                                </li>
+                                <li>
                                     <a href="{{ url('/logout') }}"
                                         onclick="event.preventDefault();
                                                  document.getElementById('logout-form').submit();">

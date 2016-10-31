@@ -129,3 +129,20 @@ if (!function_exists('get_server_ips')) {
         return $arr;
     }
 }
+
+function has_error_class($errors, $key)
+{
+    if ($errors->has($key)) {
+        return 'has-error';
+    } else {
+        return '';
+    }
+}
+function error_block($errors, $key)
+{
+    if ($errors->has($key)) {
+        return "<span class='help-block'> {$errors->first($key)} </span>";
+    } else {
+        return '';
+    }
+}

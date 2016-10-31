@@ -32,6 +32,9 @@ Auth::routes();
 //Route::get('/register', 'HomeController@index');
 //Route::post('/register', 'HomeController@index');
 //
+Route::get('/user/profile', 'UserController@profile');
+Route::patch('/user/profile', 'UserController@updateProfile');
+
 Route::get('home', 'HomeController@index');
 
 
