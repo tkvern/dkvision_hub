@@ -18,10 +18,10 @@ class Task extends Model
     const UNKNOWN = 5;
 
     public static $RENDER_TYPE = [
-        'VISIONDK_3D' => 'VISIONDK_3D', 
-        'VISIONDK_2D' => 'VISIONDK_2D', 
-        'FACEBOOK_3D' => 'FACEBOOK_3D', 
-        'FACEBOOK_2D' => 'FACEBOOK_2D', 
+        'VISIONDK_3D' => '3D_FAST', 
+        'VISIONDK_2D' => '2D_FAST', 
+        'FACEBOOK_3D' => '3D_BETTER', 
+        'FACEBOOK_2D' => '2D_BETTER', 
         'PREVIEW' => 'PREVIEW'
     ];
 

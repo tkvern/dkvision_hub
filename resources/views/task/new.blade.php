@@ -146,21 +146,12 @@
                 <div class="form-group{{ $errors->has('task_types') ? ' has-error' : '' }}">
                     <label for="task_types" class="col-md-2 control-label">任务类型</label>
                     <div class="col-md-8">
+                        @foreach(App\Task::$RENDER_TYPE as $key => $value)
                         <label class="checkbox-inline">
-                            <input type="checkbox" name="task_types[]" value="VISIONDK_3D" > VISIONDK_3D
+                            <input type="checkbox" name="task_types[]" value="{{$key}}" {{box_checked($key === 'PREVIEW')}}>
+                            {{$value}}
                         </label>
-                        <label class="checkbox-inline">
-                            <input type="checkbox" name="task_types[]" value="VISIONDK_2D"> VISIONDK_2D
-                        </label>
-                        <label class="checkbox-inline">
-                            <input type="checkbox" name="task_types[]" value="FACEBOOK_3D"> FACEBOOK_3D
-                        </label>
-                        <label class="checkbox-inline">
-                            <input type="checkbox" name="task_types[]" value="FACEBOOK_2D"> FACEBOOK_2D
-                        </label>
-                        <label class="checkbox-inline">
-                            <input type="checkbox" name="task_types[]" value="PREVIEW" checked> PREVIEW
-                        </label>
+                        @endforeach
                     </div>
                 </div>
 

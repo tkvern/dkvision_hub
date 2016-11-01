@@ -86,7 +86,7 @@
                                         {{ str_limit($task->uuid, 8, '') }}
                                     </td> -->
                                     <td class="ellipsis"> {{ $task->title }} </td>
-                                    <td class="ellipsis"> {{ $task->payload['task_type'] }} </td>
+                                    <td class="ellipsis"> {{ App\Task::$RENDER_TYPE[$task->payload['task_type']] }} </td>
                                     <td class="ellipsis"> {{ $task->creator->name }} </td>
                                     <td class="ellipsis"> {{ $task->exec_ip }} </td>
                                     <td>

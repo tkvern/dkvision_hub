@@ -104,6 +104,13 @@ if(!function_exists('option_selected')) {
     }
 }
 
+
+if(!function_exists('box_checked')) {
+    function box_checked($checked) {
+        return $checked ? 'checked' : '';
+    }
+}
+
 if (!function_exists('join_paths')) {
     function join_paths() {
         $paths = array();
