@@ -155,6 +155,19 @@
                     </div>
                 </div>
 
+                <div class="form-group">
+                    <label for="priority" class="col-md-2 control-label">是否紧急</label>
+                    <div class="col-md-8">
+                        <label class="radio-inline">
+                            <input type="radio" name="priority" value="1000"> 是
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="priority" value="100" checked> 否 
+                        </label>
+                        <span class="help-block">请就任务紧急程度度选择，以免延迟其他任务</span>
+                    </div>
+                </div>
+
                 <div class="form-group{{ $errors->has('description') ? ' has-error' : '' }}">
                     <label for="description" class="col-md-2 control-label">备注</label>
 

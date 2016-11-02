@@ -138,6 +138,7 @@ class TaskController extends Controller
             $task->creator_id = Auth::user()->id;
             $task->parent_id = 0;
             $task->status = Task::WAITING;
+            $task->priority = intval($input['priority']);
             $tasks[] = $task;
         }
         transaction_save_many($tasks);
@@ -162,6 +163,7 @@ class TaskController extends Controller
             "payload.enable_coloradjust" => "required",
             "payload.quality" => "required",
             "payload.camera_type" => "required",
+            "priority" => "required|integer",
             "task_types" => "required|array"
         ]);
         $validator->after(function($validator) use ($request) {

@@ -13,7 +13,11 @@ use App\Jobs\VideoSwitch;
 class SimpleStrategy implements  Strategy {
     public function handle($task)
     {
-        dispatch((new VideoSwitch($task))->onQueue('videos'));
+        if ($task->isEmergency()) {
+            dispatch((new VideoSwitch($task))->onQueue('videos_high'));
+        } else {
+            dispatch((new VideoSwitch($task))->onQueue('videos'));
+        }
     }
 }
 

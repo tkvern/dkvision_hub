@@ -127,4 +127,8 @@ class Task extends Model
         return $this->status === self::RUNNING;
     }
 
+    public function isEmergency() {
+        return $this->priority > 100;
+    }
+
 }
