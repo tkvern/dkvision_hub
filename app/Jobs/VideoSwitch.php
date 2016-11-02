@@ -54,6 +54,10 @@ class VideoSwitch implements ShouldQueue
             info("error: $last_line");
             $this->updateTaskStatus(Task::ERROR);
         }
+        $remoteFile = "/dkvision/logs/task_logs/task_{$this->task->id}.log";
+        if (file_exists($logFile)) {
+            @copy($logFile, $remoteFile);
+        }
     }
 
     public function failed($e) {
