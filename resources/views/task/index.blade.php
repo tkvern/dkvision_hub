@@ -85,7 +85,11 @@
                                             data-toggle="tooltip" data-placement="left" title="{{ $task->uuid }}">
                                         {{ str_limit($task->uuid, 8, '') }}
                                     </td> -->
+                                    @if($task->isEmergency())
+                                    <td class="ellipsis"> {{ $task->title }} <span class="badge" style="background-color: #d9534f">急</span> </td>
+                                    @else
                                     <td class="ellipsis"> {{ $task->title }} </td>
+                                    @endif
                                     <td class="ellipsis"> {{ App\Task::$RENDER_TYPE[$task->payload['task_type']] }} </td>
                                     <td class="ellipsis"> {{ $task->creator->name }} </td>
                                     <td class="ellipsis"> {{ $task->exec_ip }} </td>
@@ -98,7 +102,7 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <td>{!! $task->status_label() !!}</td>
+                                    <td>{!! $task->status_label() !!} </td>
                                     <td>
                                         <div class="btn-group btn-group-sm">
                                             <a href="{{ url('tasks', [$task->id]) }}" class="btn btn-default" role="button">详情</a>
