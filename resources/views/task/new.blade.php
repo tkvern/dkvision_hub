@@ -74,32 +74,6 @@
                     </div>
                 </div>
 
-                <div class="form-group{{ $errors->has('payload.enable_top') ? ' has-error' : '' }}">
-                    <label for="payload[enable_top]" class="col-md-2 control-label">顶部</label>
-
-                    <div class="col-md-8">
-                        <label class="radio-inline">
-                            <input type="radio" name="payload[enable_top]"  value="0" checked> 关闭
-                        </label>
-                        <label class="radio-inline">
-                            <input type="radio" name="payload[enable_top]"  value="1"> 开启
-                        </label>
-                    </div>
-                </div>
-
-                <div class="form-group{{ $errors->has('payload.enable_bottom') ? ' has-error' : '' }}">
-                    <label for="payload[enable_bottom]" class="col-md-2 control-label">底部</label>
-
-                    <div class="col-md-8">
-                        <label class="radio-inline">
-                            <input type="radio" name="payload[enable_bottom]" value="0" checked> 关闭
-                        </label>
-                        <label class="radio-inline">
-                            <input type="radio" name="payload[enable_bottom]" value="1"> 开启
-                        </label>
-                    </div>
-                </div>
-
                 <div class="form-group{{ $errors->has('payload.enable_coloradjust') ? ' has-error' : '' }}">
                     <label for="payload[enable_coloradjust]" class="col-md-2 control-label">颜色调整</label>
 
@@ -146,7 +120,7 @@
                 <div class="form-group{{ $errors->has('task_types') ? ' has-error' : '' }}">
                     <label for="task_types" class="col-md-2 control-label">任务类型</label>
                     <div class="col-md-8">
-                        @foreach(App\Task::$RENDER_TYPE as $key => $value)
+                        @foreach(array_except(App\Task::$RENDER_TYPE, ['TOP_BOTTOM']) as $key => $value)
                         <label class="checkbox-inline">
                             <input type="checkbox" name="task_types[]" value="{{$key}}" {{box_checked($key === 'PREVIEW')}}>
                             {{$value}}

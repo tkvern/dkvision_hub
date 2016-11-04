@@ -12,10 +12,24 @@ use App\Utils\DkvideoHelper;
 
 Trait TaskCommand {
     public function outputDir() {
-        if (!empty($this->payload['output_dir'])) {
+        if ($this->payload['task_type'] === 'TOP_BOTTOM') {
+            return $this->payload['output_dir'];
+        } elseif (!empty($this->payload['output_dir'])) {
             return join_paths($this->payload['output_dir'], $this->payload['task_type']);
         } else {
             return join_paths($this->payload['video_dir'], $this->payload['task_type']);
+        }
+    }
+
+    public function targetDir() {
+        if ($this->task_type === 'TOP_BOTTOM') {
+            if (is_true($this->payload['enable_top'])) {
+                return join_paths($this->outputDir(), 'top_pano');
+            } else {
+                return join_paths($this->outputDir(), 'bottom_pano');
+            }
+        } else {
+            return join_paths($this->outputDir(), 'left_pano');
         }
     }
 
@@ -43,6 +57,7 @@ Trait TaskCommand {
             'FACEBOOK_3D' => 'test_3d_facebook',
             'FACEBOOK_2D' => 'test_2d_facebook',
             'PREVIEW' => 'test_preview',
+            'TOP_BOTTOM' => 'test_top_and_bottom'
         ];
         $execBin = array_get($execBins, strtoupper($this->payload['task_type']));
         $execPath = join_paths(config('task.visiondk_bin'), $execBin);
@@ -61,8 +76,8 @@ Trait TaskCommand {
         $paramsArr['mix_rectify_file'] = join_paths($video_dir, 'mix_rectify.xml');
         $paramsArr['camera_setting_file'] = join_paths(config('task.visiondk_setting_path'), 
             DkvideoHelper::cameraSettingName($payload['camera_type'], $payload['task_type']));
-        $paramsArr['enable_top'] = $payload['enable_top'];
-        $paramsArr['enable_bottom'] = $payload['enable_bottom'];
+        $paramsArr['enable_top'] = array_get($payload, 'enable_top', '0');
+        $paramsArr['enable_bottom'] = array_get($payload, 'enable_bottom', '0');
         $paramsArr['enable_coloradjust'] = $payload['enable_coloradjust'];
         $paramsArr['start_frame'] = $this->findStartFrame();
         $paramsArr['end_frame'] = $payload['end_frame'];
@@ -75,7 +90,7 @@ Trait TaskCommand {
         $parameters = [
             'video_dir', 'output_dir', 'time_alignment_file', 
             'camera_setting_file', 'ring_rectify_file', 'top_rectify_file',
-            'mix_rectify_file', 'enable_top', 'start_frame', 'end_frame', 
+            'mix_rectify_file', 'enable_top', 'enable_bottom', 'start_frame', 'end_frame', 
             'save_type'
         ];
         return $parameters;
@@ -86,7 +101,8 @@ Trait TaskCommand {
             return $this->payload['start_frame'];
         }
         $outputDir = $this->outputDir();
-        $targetDir = join_paths($outputDir, 'left_pano');
+        $targetDir = $this->targetDir();
+        info("target dir: $targetDir");
         if (!file_exists($targetDir)) {
             return $this->payload['start_frame'];
         }
@@ -95,13 +111,14 @@ Trait TaskCommand {
         foreach($dirIterator as $fileInfo) {
             if ($fileInfo->isFile()) {
                 $filename = $fileInfo->getFilename();
-                if ($filename > $lastFilename) {
+                if (strpos($filename, '_') === false && $filename > $lastFilename) {
                     $lastFilename = $filename;
                 }
             }
         }
         $number = explode('.', $lastFilename, 2)[0];
         if (preg_match('/^[0-9]+$/', $number)) {
+            info("target frame: $number");
             return intval($number) - 1;
         } else {
             return $this->payload['start_frame'];

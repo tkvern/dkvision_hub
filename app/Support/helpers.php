@@ -55,6 +55,31 @@ if(! function_exists('directory_file_count')) {
     }
 }
 
+if(! function_exists('directory_file_count_with_filter')) {
+    /**
+     * 计算目录中常规文件的数量
+     *
+     * @param string $dir
+     * @param callable $filter::bool filter(name)
+     * @return int
+     */
+    function directory_file_count_with_filter($dir, Closure $filter) {
+        if(!is_dir($dir)) {
+            return 0;
+        }
+        $dirIterator = new DirectoryIterator($dir);
+        $count = 0;
+        foreach($dirIterator as $fileInfo) {
+            if(!$fileInfo->isDot() && 
+                    !$fileInfo->isDir() && 
+                    $filter($fileInfo->getFilename())) {
+                $count++;
+            }
+        }
+        return $count;
+    }
+}
+
 if(! function_exists('transaction_save_many')) {
     /**
      * 在事务中保存多个Eloguent ORM model
