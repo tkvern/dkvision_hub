@@ -111,7 +111,7 @@
                                                     更多
                                                     <span class="caret"></span>
                                                 </button>
-                                                <ul class="dropdown-menu" role="menu">
+                                                <ul class="dropdown-menu dropdown-menu-right" role="menu">
                                                     @if($task->canRetry())
                                                     <li><a class="retry" href="#" data-target="/tasks/{{ $task->id }}/retry">重试</a></li>
                                                     @endif
