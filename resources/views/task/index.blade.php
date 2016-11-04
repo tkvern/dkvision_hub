@@ -80,54 +80,7 @@
                             </thead>
                             <tbody>
                             @foreach($tasks as $task)
-                                <tr>
-                                    <!-- <td class="ellipsis"
-                                            data-toggle="tooltip" data-placement="left" title="{{ $task->uuid }}">
-                                        {{ str_limit($task->uuid, 8, '') }}
-                                    </td> -->
-                                    @if($task->isEmergency())
-                                    <td class="ellipsis"> {{ $task->title }} <span class="badge" style="background-color: #d9534f">急</span> </td>
-                                    @else
-                                    <td class="ellipsis"> {{ $task->title }} </td>
-                                    @endif
-                                    <td class="ellipsis"> {{ App\Task::$RENDER_TYPE[$task->payload['task_type']] }} </td>
-                                    <td class="ellipsis"> {{ $task->creator->name }} </td>
-                                    <td class="ellipsis"> {{ $task->exec_ip }} </td>
-                                    <td>
-                                        <div class="progress" style="min-width: 200px; margin-bottom: 0px;">
-                                            <div class="progress-bar progress-bar-{{ $task->status_class() }}" role="progressbar"
-                                                 aria-valuenow="{{ $task->processing() }}" aria-valuemin="0" aria-valuemax="100"
-                                                 style="width: {{ $task->processing() }}%;">
-                                                {{ $task->processing() }}%
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>{!! $task->status_label() !!} </td>
-                                    <td>
-                                        <div class="btn-group btn-group-sm">
-                                            <a href="{{ url('tasks', [$task->id]) }}" class="btn btn-default" role="button">详情</a>
-                                            <div class="btn-group btn-group-sm" id="more">
-                                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                                    更多
-                                                    <span class="caret"></span>
-                                                </button>
-                                                <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                                                    @if($task->canRetry())
-                                                    <li><a class="retry" href="#" data-target="/tasks/{{ $task->id }}/retry">重试</a></li>
-                                                    @endif
-                                                    @if($task->canTerminate())
-                                                    <li><a class="terminate" href="#" data-target="/tasks/{{ $task->id }}/terminate">终止</a></li>
-                                                    @endif
-                                                    @if($task->canDelete())
-                                                    <li>
-                                                        <a class="delete" href="#" data-target="{{ url('/tasks', [$task->id]) }}">删除</a>
-                                                    </li>
-                                                    @endif
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
+                                @include('task.list_item', ['task' => $task])
                             @endforeach
                             </tbody>
                         </table>
@@ -153,12 +106,19 @@
             }
         });
         $('[data-toggle=tooltip]').tooltip({container: 'body'});
-        // 任务删除
-        $('#more a.delete').on('click', function () {
+
+        $('a[remote]').on('click', function(e) {
+            e.preventDefault();
             var url = $(this).data('target');
+            var text = $(this).data('confirm');
+            var method = ($(this).data('method') || 'GET').toUpperCase();
+            var data = $(this).data('values') || {}
+            if(method !== 'GET' || method !== 'POST') {
+                data['_method'] = method;
+            }
             swal({
                     title: "",
-                    text: "确认删除任务?",
+                    text: text,
                     type: "warning",
                     showCancelButton: true,
                     confirmButtonClass: "btn-danger",
@@ -170,76 +130,9 @@
                 function(){
                     $.ajax({
                         url: url,
-                        type: 'DELETE',
+                        type: method,
                         dataType: 'json',
-                        data: {
-                            _method: 'delete'
-                        },
-                        success: function(data) {
-                            if(data.err_code == '0') {
-                                window.location.reload();
-                            } else {
-                                swal("糟糕", data.err_msg, "error");
-                            }
-                        }
-                    })
-                });
-        });
-        // 任务重试
-        $('#more a.retry').on('click', function() {
-            var url = $(this).data('target');
-            swal({
-                    title: "",
-                    text: "确认重试任务?",
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonClass: "btn-danger",
-                    cancelButtonText: "取消",
-                    confirmButtonText: "确认",
-                    closeOnConfirm: false,
-                    showLoaderOnConfirm: true
-                },
-                function(){
-                    $.ajax({
-                        url: url,
-                        type: 'POST',
-                        dataType: 'json',
-                        data: {
-                            force:  false
-                        },
-                        success: function(data) {
-                            if(data.err_code == '0') {
-                                window.location.reload();
-                            } else {
-                                swal("糟糕", data.err_msg, "error");
-                            }
-                        }
-                    })
-                }
-            );
-        });
-        // 任务终止
-        $('#more a.terminate').on('click', function() {
-            var url = $(this).data('target');
-            swal({
-                    title: "",
-                    text: "确认终止任务?",
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonClass: "btn-danger",
-                    cancelButtonText: "取消",
-                    confirmButtonText: "确认",
-                    closeOnConfirm: false,
-                    showLoaderOnConfirm: true
-                },
-                function(){
-                    $.ajax({
-                        url: url,
-                        type: 'POST',
-                        dataType: 'json',
-                        data: {
-                            force:  false
-                        },
+                        data: data,
                         success: function(data) {
                             if(data.err_code == '0') {
                                 window.location.reload();

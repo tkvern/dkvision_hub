@@ -46,3 +46,4 @@ Route::get('tasks/{task_id}', 'TaskController@show');
 Route::delete('tasks/{task_id}', 'TaskController@destroy');
 Route::post('tasks/{task_id}/retry', 'TaskController@retry');
 Route::post('tasks/{task_id}/terminate', 'TaskController@terminate');
+Route::post('tasks/{task_id}/topbottom', 'TaskController@createTopBottom');

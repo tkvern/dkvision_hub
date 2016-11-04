@@ -34,6 +34,7 @@ class TaskController extends Controller
             $resource = $resource->where('title', 'like', "%{$filterKeys['key']}%");
         }
         $tasks = $resource->with('creator')
+                          ->with('attachedTasks')
                           ->where('parent_id', 0)
                           ->orderBy('id', 'desc')
                           ->paginate(10);
@@ -120,6 +121,29 @@ class TaskController extends Controller
         }
     }
 
+    public function createTopBottom(Request $request, $task_id) {
+        $task = Task::find($task_id); 
+        if (!$task->canCreateTopAndBottom()) {
+            return $this->errorJsonResponse('400.004', '任务类型不支持或状态不允许');
+        }
+        $payload = array_copy($task->payload);
+        $newTask = $task->replicate();
+        $newTask->uuid = uuid1();
+        $newTask->attach_id = $task->id;
+        $newTask->task_type = "TOP_BOTTOM";
+        $newTask->status = Task::WAITING;
+        $newTask->exec_ip = "";
+        $newTask->payload = array_copy($task->payload);
+        $payload['task_type']= 'TOP_BOTTOM';
+        $payload['enable_top']= $request->input('enable_top', '0');
+        $payload['enable_bottom']= $request->input('enable_bottom', '0');
+        $payload['output_dir'] = $task->outputDir();
+        $newTask->payload = $payload;
+        $newTask->save();
+        $this->enQueueTasks([$newTask]);
+        return $this->successJsonResponse();
+    }
+
     private function createTasks($input) {
         $tasks = [];
         $task_types = array_reverse($input['task_types']);
@@ -133,7 +157,7 @@ class TaskController extends Controller
             $task->uuid = uuid1();
             $task->title = $input['title'];
             $task->description = $input['description'];
-            $task->task_type = 'videoswitch';
+            $task->task_type = $task_type;
             $task->payload = $payload;
             $task->creator_id = Auth::user()->id;
             $task->parent_id = 0;
@@ -158,8 +182,6 @@ class TaskController extends Controller
             "payload.output_dir" => "required",
             "payload.start_frame" => "required|integer",
             "payload.end_frame" => "required|integer",
-            "payload.enable_top" => "required",
-            "payload.enable_bottom" => "required",
             "payload.enable_coloradjust" => "required",
             "payload.quality" => "required",
             "payload.camera_type" => "required",

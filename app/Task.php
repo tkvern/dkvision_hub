@@ -22,7 +22,8 @@ class Task extends Model
         'VISIONDK_2D' => '2D_FAST', 
         'FACEBOOK_3D' => '3D_BETTER', 
         'FACEBOOK_2D' => '2D_BETTER', 
-        'PREVIEW' => 'PREVIEW'
+        'PREVIEW' => 'PREVIEW',
+        'TOP_BOTTOM' => 'TOP_BOTTOM'
     ];
 
     public static $ALL_STATUS = [
@@ -65,6 +66,14 @@ class Task extends Model
         return $this->belongsTo('App\Task', 'parent_id');
     }
 
+    public function attachedTasks() {
+        return $this->hasMany('App\Task', 'attach_id');
+    }
+
+    public function dependTask() {
+        return $this->belongsTo('App\Task', 'attach_id');
+    }
+
     public function human_status() {
         return array_get(self::$ALL_STATUS, $this->status, "未知");
     }
@@ -104,11 +113,13 @@ class Task extends Model
 
     public function calcProcessing() {
         $totalFrames = $this->payload['end_frame'] - $this->payload['start_frame'] + 1;
-        $targetDir = join_paths($this->outputDir(), "left_pano");
+        $targetDir = $this->targetDir();
         if (!file_exists($targetDir)) {
             return 0;
         }
-        $finishFrames = directory_file_count($targetDir);
+        $finishFrames = directory_file_count_with_filter($targetDir, function($name) {
+            return strpos($name, '_') === false;
+        });
         info("==$targetDir== state: [$finishFrames/$totalFrames]");
         return floor($finishFrames*100/$totalFrames);
     }
@@ -125,6 +136,11 @@ class Task extends Model
 
     public function canTerminate() {
         return $this->status === self::RUNNING;
+    }
+
+    public function canCreateTopAndBottom() {
+        return ( $this->status === self::FINISH && 
+                 !in_array($this->payload['task_type'], ['TOP_BOTTOM', 'PREVIEW']));
     }
 
     public function isEmergency() {
