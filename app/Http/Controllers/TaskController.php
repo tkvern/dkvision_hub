@@ -133,6 +133,8 @@ class TaskController extends Controller
         $newTask->attach_id = $task->id;
         $newTask->task_type = "TOP_BOTTOM";
         $newTask->status = Task::WAITING;
+        $newTask->processed = 0;
+        $newTask->processed_at = null;
         $newTask->exec_ip = "";
         $newTask->payload = array_copy($task->payload);
         $payload['task_type']= $task->payload['task_type'];
