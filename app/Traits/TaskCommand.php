@@ -12,7 +12,7 @@ use App\Utils\DkvideoHelper;
 
 Trait TaskCommand {
     public function outputDir() {
-        if ($this->payload['task_type'] === 'TOP_BOTTOM') {
+        if ($this->task_type === 'TOP_BOTTOM') {
             return $this->payload['output_dir'];
         } elseif (!empty($this->payload['output_dir'])) {
             return join_paths($this->payload['output_dir'], $this->payload['task_type']);

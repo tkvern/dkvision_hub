@@ -134,7 +134,7 @@ class TaskController extends Controller
         $newTask->status = Task::WAITING;
         $newTask->exec_ip = "";
         $newTask->payload = array_copy($task->payload);
-        $payload['task_type']= 'TOP_BOTTOM';
+        $payload['task_type']= $task->payload['task_type'];
         $payload['enable_top']= $request->input('enable_top', '0');
         $payload['enable_bottom']= $request->input('enable_bottom', '0');
         $payload['output_dir'] = $task->outputDir();
