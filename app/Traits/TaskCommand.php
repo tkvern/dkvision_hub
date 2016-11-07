@@ -73,6 +73,7 @@ Trait TaskCommand {
         $paramsArr['output_dir'] = $this->outputDir();
         $paramsArr['ring_rectify_file'] = join_paths($video_dir, 'ring_rectify.xml');
         $paramsArr['top_rectify_file'] = join_paths($video_dir, 'top_rectify.xml');
+        $paramsArr['bottom_rectify_file'] = join_paths($video_dir, 'bottom_rectify.xml');
         $paramsArr['mix_rectify_file'] = join_paths($video_dir, 'mix_rectify.xml');
         $paramsArr['camera_setting_file'] = join_paths(config('task.visiondk_setting_path'), 
             DkvideoHelper::cameraSettingName($payload['camera_type'], $payload['task_type']));
@@ -89,7 +90,7 @@ Trait TaskCommand {
     private function cmdRequiredParameters() {
         $parameters = [
             'video_dir', 'output_dir', 'time_alignment_file', 
-            'camera_setting_file', 'ring_rectify_file', 'top_rectify_file',
+            'camera_setting_file', 'ring_rectify_file', 'top_rectify_file', 'bottom_rectify_file',
             'mix_rectify_file', 'enable_top', 'enable_bottom', 'start_frame', 'end_frame', 
             'save_type'
         ];
@@ -121,7 +122,7 @@ Trait TaskCommand {
             info("target frame: $number");
             return intval($number) - 1;
         } else {
-            return $this->payload['start_frame'];
+            return intval($this->payload['start_frame']);
         }
     }
 }
