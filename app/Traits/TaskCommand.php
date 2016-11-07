@@ -59,7 +59,7 @@ Trait TaskCommand {
             'PREVIEW' => 'test_preview',
             'TOP_BOTTOM' => 'test_top_and_bottom'
         ];
-        $execBin = array_get($execBins, strtoupper($this->payload['task_type']));
+        $execBin = array_get($execBins, strtoupper($this->task_type));
         $execPath = join_paths(config('task.visiondk_bin'), $execBin);
         return $execPath;
     }
