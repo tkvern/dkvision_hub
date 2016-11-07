@@ -98,14 +98,15 @@ Trait TaskCommand {
     }
 
     private function findStartFrame() {
+        $startFrame = intval($this->payload['start_frame']);
         if ($this->payload['task_type'] === 'PREVIEW') {
-            return intval($this->payload['start_frame']);
+            return $startFrame;
         }
         $outputDir = $this->outputDir();
         $targetDir = $this->targetDir();
         info("target dir: $targetDir");
         if (!file_exists($targetDir)) {
-            return intval($this->payload['start_frame']);
+            return $startFrame;
         }
         $dirIterator = new DirectoryIterator($targetDir);
         $lastFilename = '';
@@ -120,9 +121,13 @@ Trait TaskCommand {
         $number = explode('.', $lastFilename, 2)[0];
         if (preg_match('/^[0-9]+$/', $number)) {
             info("target frame: $number");
-            return intval($number) - 1;
+            if (intval($number) <= $startFrame) {
+                return $startFrame;
+            } else {
+                return intval($number) - 1;
+            }
         } else {
-            return intval($this->payload['start_frame']);
+            return $startFrame;
         }
     }
 }
