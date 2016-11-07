@@ -114,12 +114,11 @@ class Task extends Model
     public function calcProcessing() {
         $totalFrames = $this->payload['end_frame'] - $this->payload['start_frame'] + 1;
         $targetDir = $this->targetDir();
-        if (!file_exists($targetDir)) {
-            return 0;
-        }
-        $finishFrames = directory_file_count_with_filter($targetDir, function($name) {
-            return strpos($name, '_') === false;
-        });
+        $startFrame = $this->findStartFrame();
+        $finishFrames = 0;
+        if ($startFrame !== intval($this->payload['start_frame'])) {
+            $finishFrames = $startFrame - intval($this->payload['start_frame']) + 2;
+        } 
         info("==$targetDir== state: [$finishFrames/$totalFrames]");
         return floor($finishFrames*100/$totalFrames);
     }

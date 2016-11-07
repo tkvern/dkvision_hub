@@ -99,13 +99,13 @@ Trait TaskCommand {
 
     private function findStartFrame() {
         if ($this->payload['task_type'] === 'PREVIEW') {
-            return $this->payload['start_frame'];
+            return intval($this->payload['start_frame']);
         }
         $outputDir = $this->outputDir();
         $targetDir = $this->targetDir();
         info("target dir: $targetDir");
         if (!file_exists($targetDir)) {
-            return $this->payload['start_frame'];
+            return intval($this->payload['start_frame']);
         }
         $dirIterator = new DirectoryIterator($targetDir);
         $lastFilename = '';

@@ -71,11 +71,11 @@
                         </tr>
                         <tr>
                             <td class="text-right">顶部</td>
-                            <td>{{ $task->payload['enable_top'] }}</td>
+                            <td>{{ array_get($task->payload, 'enable_top', 0) }}</td>
                         </tr>
                         <tr>
                             <td class="text-right">底部</td>
-                            <td>{{ $task->payload['enable_bottom'] }}</td>
+                            <td>{{ array_get($task->payload, 'enable_bottom', 0) }}</td>
                         </tr>
                         <tr>
                             <td class="text-right">颜色调整</td>
