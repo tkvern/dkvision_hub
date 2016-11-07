@@ -129,6 +129,7 @@ class TaskController extends Controller
         $payload = array_copy($task->payload);
         $newTask = $task->replicate();
         $newTask->uuid = uuid1();
+        $newTask->creator_id = $request->user()->id;
         $newTask->attach_id = $task->id;
         $newTask->task_type = "TOP_BOTTOM";
         $newTask->status = Task::WAITING;
