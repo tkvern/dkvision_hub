@@ -108,7 +108,7 @@ Trait TaskCommand {
         if (!file_exists($targetDir)) {
             return $startFrame;
         }
-        $suffix = DkvideoHelper::cameraSaveType($payload['camera_type']);
+        $suffix = DkvideoHelper::cameraSaveType($this->payload['camera_type']);
         $fileName = join_paths($targetDir, str_pad($startFrame + 1, 6, '0', STR_PAD_LEFT).$suffix);
         if (!file_exists($fileName)) {
             return $startFrame;
