@@ -99,35 +99,29 @@ Trait TaskCommand {
 
     private function findStartFrame() {
         $startFrame = intval($this->payload['start_frame']);
+        $endFrame = intval($this->payload['end_frame']);
         if ($this->payload['task_type'] === 'PREVIEW') {
             return $startFrame;
         }
-        $outputDir = $this->outputDir();
         $targetDir = $this->targetDir();
         info("target dir: $targetDir");
         if (!file_exists($targetDir)) {
             return $startFrame;
         }
-        $dirIterator = new DirectoryIterator($targetDir);
-        $lastFilename = '';
-        foreach($dirIterator as $fileInfo) {
-            if ($fileInfo->isFile()) {
-                $filename = $fileInfo->getFilename();
-                if (strpos($filename, '_') === false && $filename > $lastFilename) {
-                    $lastFilename = $filename;
-                }
-            }
-        }
-        $number = explode('.', $lastFilename, 2)[0];
-        if (preg_match('/^[0-9]+$/', $number)) {
-            info("target frame: $number");
-            if (intval($number) <= $startFrame) {
-                return $startFrame;
-            } else {
-                return intval($number) - 1;
-            }
-        } else {
+        $suffix = DkvideoHelper::cameraSaveType($payload['camera_type']);
+        $fileName = join_paths($targetDir, str_pad($startFrame + 1, 6, '0', STR_PAD_LEFT).$suffix);
+        if (!file_exists($fileName)) {
             return $startFrame;
         }
+        while ($startFrame <= $endFrame) {
+            $mid = floor(($startFrame + $endFrame) / 2);
+            $fileName = join_paths($targetDir, str_pad($mid, 6, '0', STR_PAD_LEFT).$suffix);
+            if (file_exists($fileName)) {
+                $startFrame = $mid + 1;
+            } else {
+                $endFrame = $mid - 1;
+            }
+        }
+        return $endFrame - 1;
     }
 }
